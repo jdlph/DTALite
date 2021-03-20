@@ -7,16 +7,17 @@
  * More about "How to use GNU licenses for your own software"
  * http://www.gnu.org/licenses/gpl-howto.html 
  */
-
+#ifdef _WIN32
 #include "pch.h"
+#endif
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include "teestream.h"
 #include "utils.h"
-#include "assignment.h"
+#include "config.h"
 
-int main(int argc, TCHAR* argv[], TCHAR* envp[])
+int main()
 {
     std::ofstream file("log.csv");
     teestream log_out(std::cout, file);
@@ -63,10 +64,6 @@ int main(int argc, TCHAR* argv[], TCHAR* envp[])
                     assignment_mode = 2;
                 else if (assignment_mode_str == "odme")
                     assignment_mode = 3;
-                else if (assignment_mode_str == "sig")
-                    assignment_mode = 4;
-                else if (assignment_mode_str == "gravity")
-                    assignment_mode = 5;
                 else
                 {
                     log_out << "assignment_mode " << assignment_mode_str.c_str() << " in settings.csv is invalid." << std::endl;
@@ -95,6 +92,8 @@ int main(int argc, TCHAR* argv[], TCHAR* envp[])
             }
         }
     }
+    // obtain initial flow values
+    network_assignment(assignment_mode, iteration_number, column_updating_iterations); 
 
-    network_assignment(iteration_number, assignment_mode, column_updating_iterations);  // obtain initial flow values
+    return 0;
 }

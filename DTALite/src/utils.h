@@ -48,7 +48,7 @@ public:
     std::vector<std::string> GetHeaderVector() 
     {
         return Headers;
-    };
+    }
 
     void CloseCSVFile()
     {

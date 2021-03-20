@@ -7,8 +7,9 @@
  * More about "How to use GNU licenses for your own software"
  * http://www.gnu.org/licenses/gpl-howto.html 
  */
-
+#ifdef _WIN32
 #include "pch.h"
+#endif
 
 // Peiheng, 02/03/21, remove them later
 #pragma warning(disable : 4305 4267 4018) 
@@ -32,10 +33,10 @@
 #include <iomanip>
 #include <cstring>
 #include "utils.h"
-// #include "MathLibrary.h"
-#include "assignment.h"
+#include "config.h"
 
 using std::max;
+using std::min;
 using std::cout;
 using std::endl;
 using std::string;
@@ -3290,25 +3291,25 @@ void g_ReadInputData(Assignment& assignment)
                 link.VDF_period[tau].ending_time_slot_no = assignment.g_DemandPeriodVector[tau].ending_time_slot_no;
 
                 int demand_period_id = assignment.g_DemandPeriodVector[tau].demand_period_id;
-                sprintf_s (VDF_field_name, "VDF_fftt%d", demand_period_id);
+                sprintf (VDF_field_name, "VDF_fftt%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].FFTT,false,false);  // FFTT should be per min
 
-                sprintf_s (VDF_field_name, "VDF_cap%d", demand_period_id);
+                sprintf (VDF_field_name, "VDF_cap%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].capacity, false, false);  // capacity should be per period per link (include all lanes)
 
-                sprintf_s (VDF_field_name, "VDF_alpha%d", demand_period_id);
+                sprintf (VDF_field_name, "VDF_alpha%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].alpha, false, false);
 
-                sprintf_s (VDF_field_name, "VDF_beta%d", demand_period_id);
+                sprintf (VDF_field_name, "VDF_beta%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].beta, false, false);
 
-                sprintf_s(VDF_field_name, "VDF_PHF%d", demand_period_id);
-                parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].PHF); 
+                sprintf(VDF_field_name, "VDF_PHF%d", demand_period_id);
+                parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].PHF, false, false); 
 
-                sprintf_s (VDF_field_name, "VDF_mu%d", demand_period_id);
-                parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].mu);  // mu should be per hour per link, so that we can calculate congestion duration and D/mu in BPR-X
+                sprintf (VDF_field_name, "VDF_mu%d", demand_period_id);
+                parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].mu, false, false);  // mu should be per hour per link, so that we can calculate congestion duration and D/mu in BPR-X
 
-                //sprintf_s (VDF_field_name, "VDF_gamma%d", demand_period_id);  // remove gamma
+                //sprintf (VDF_field_name, "VDF_gamma%d", demand_period_id);  // remove gamma
                 //parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].gamma);    
             }
 
@@ -5086,8 +5087,7 @@ void  CLink::CalculateTD_VDFunction()
     }
 }
 
-
-double network_assignment(int iteration_number, int assignment_mode, int column_updating_iterations)
+double network_assignment(int assignment_mode, int iteration_number, int column_updating_iterations)
 {
     // for testing
     cout << "network assignment" << endl;

@@ -69,7 +69,7 @@ using std::max;
 #define LCG_M 65521  // it should be 2^32, but we use a small 16-bit number to save memory
 
 
-FILE* g_pFileOutputLog = nullptr;
+FILE* g_pFileOutputLog = NULL;
 ofstream g_fout("log.txt");
 //teestream g_fout(std::cout, file);
 
@@ -505,7 +505,7 @@ T **AllocateDynamicArray(int nRows, int nCols)
 
 	dynamicArray = new (std::nothrow) T*[nRows];
 
-	if (dynamicArray == nullptr)
+	if (dynamicArray == NULL)
 	{
 		g_fout << "Error: insufficient memory.";
 		g_ProgramStop();
@@ -516,7 +516,7 @@ T **AllocateDynamicArray(int nRows, int nCols)
 	{
 		dynamicArray[i] = new (std::nothrow) T[nCols];
 
-		if (dynamicArray[i] == nullptr)
+		if (dynamicArray[i] == NULL)
 		{
 			g_fout << "Error: insufficient memory.";
 			g_ProgramStop();
@@ -550,7 +550,7 @@ T ***Allocate3DDynamicArray(int nX, int nY, int nZ)
 
 	dynamicArray = new (std::nothrow) T**[nX];
 
-	if (dynamicArray == nullptr)
+	if (dynamicArray == NULL)
 	{
 		g_fout << "Error: insufficient memory.";
 		g_ProgramStop();
@@ -566,7 +566,7 @@ T ***Allocate3DDynamicArray(int nX, int nY, int nZ)
 
 		dynamicArray[x] = new (std::nothrow) T*[nY];
 
-		if (dynamicArray[x] == nullptr)
+		if (dynamicArray[x] == NULL)
 		{
 			g_fout << "Error: insufficient memory.";
 			g_ProgramStop();
@@ -575,7 +575,7 @@ T ***Allocate3DDynamicArray(int nX, int nY, int nZ)
 		for (int y = 0; y < nY; y++)
 		{
 			dynamicArray[x][y] = new (std::nothrow) T[nZ];
-			if (dynamicArray[x][y] == nullptr)
+			if (dynamicArray[x][y] == NULL)
 			{
 				g_fout << "Error: insufficient memory.";
 				g_ProgramStop();
@@ -621,7 +621,7 @@ T ****Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
 
 	dynamicArray = new (std::nothrow) T***[nX];
 
-	if (dynamicArray == nullptr)
+	if (dynamicArray == NULL)
 	{
 		g_fout << "Error: insufficient memory.";
 		g_ProgramStop();
@@ -633,7 +633,7 @@ T ****Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
 
 		dynamicArray[m] = new (std::nothrow) T**[nX];
 
-		if (dynamicArray[m] == nullptr)
+		if (dynamicArray[m] == NULL)
 		{
 			g_fout << "Error: insufficient memory.";
 			g_ProgramStop();
@@ -643,7 +643,7 @@ T ****Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
 		{
 			dynamicArray[m][x] = new (std::nothrow) T*[nY];
 
-			if (dynamicArray[m][x] == nullptr)
+			if (dynamicArray[m][x] == NULL)
 			{
 				g_fout << "Error: insufficient memory.";
 				g_ProgramStop();
@@ -652,7 +652,7 @@ T ****Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
 			for (int y = 0; y < nY; y++)
 			{
 				dynamicArray[m][x][y] = new (std::nothrow) T[nZ];
-				if (dynamicArray[m][x][y] == nullptr)
+				if (dynamicArray[m][x][y] == NULL)
 				{
 					g_fout << "Error: insufficient memory.";
 					g_ProgramStop();
@@ -870,8 +870,8 @@ float path_gradient_cost_relative_difference;  // first order graident cost - le
 
 CColumnPath()
 {
-	path_node_vector = nullptr;
-	path_link_vector = nullptr;
+	path_node_vector = NULL;
+	path_link_vector = NULL;
 
 	path_switch_volume = 0;
 	path_seq_no = 0;
@@ -986,8 +986,8 @@ public:
 		m_bGenereated = false;
 
 		path_toll = 0;
-		m_Veh_LinkArrivalTime_in_simu_interval = nullptr;
-		m_Veh_LinkDepartureTime_in_simu_interval = nullptr;
+		m_Veh_LinkArrivalTime_in_simu_interval = NULL;
+		m_Veh_LinkDepartureTime_in_simu_interval = NULL;
 		m_bCompleteTrip = false;
 		departure_time_in_min = 0;
 	}
@@ -1037,7 +1037,7 @@ public:
 
 	void AllocateMemory()
 	{
-		if (m_Veh_LinkArrivalTime_in_simu_interval == nullptr)
+		if (m_Veh_LinkArrivalTime_in_simu_interval == NULL)
 		{
 			m_current_link_seq_no = 0;
 			m_Veh_LinkArrivalTime_in_simu_interval = new int[path_link_seq_no_vector.size()];
@@ -1058,11 +1058,11 @@ public:
 
 	void DeallocateMemory()
 	{
-		if (m_Veh_LinkArrivalTime_in_simu_interval != nullptr) delete m_Veh_LinkArrivalTime_in_simu_interval;
-		if (m_Veh_LinkDepartureTime_in_simu_interval != nullptr) delete m_Veh_LinkDepartureTime_in_simu_interval;
+		if (m_Veh_LinkArrivalTime_in_simu_interval != NULL) delete m_Veh_LinkArrivalTime_in_simu_interval;
+		if (m_Veh_LinkDepartureTime_in_simu_interval != NULL) delete m_Veh_LinkDepartureTime_in_simu_interval;
 
-		m_Veh_LinkArrivalTime_in_simu_interval = nullptr;
-		m_Veh_LinkDepartureTime_in_simu_interval = nullptr;
+		m_Veh_LinkArrivalTime_in_simu_interval = NULL;
+		m_Veh_LinkDepartureTime_in_simu_interval = NULL;
 
 	}
 
@@ -1079,8 +1079,8 @@ public:
 		
 		g_number_of_memory_blocks =4;
 		total_demand_volume = 0.0; 
-		g_column_pool = nullptr;
-		g_origin_demand_array = nullptr;
+		g_column_pool = NULL;
+		g_origin_demand_array = NULL;
 		//pls check following 7 settings before running programmer
 		g_number_of_threads = 1;
 		g_number_of_column_generation_iterations = 20;
@@ -1135,9 +1135,9 @@ public:
 	~Assignment()
 	{
 
-		if (g_column_pool)
+		if (g_column_pool != NULL)
 			Deallocate4DDynamicArray(g_column_pool, g_number_of_zones, g_number_of_zones, g_number_of_agent_types);
-		if (g_origin_demand_array)
+		if (g_origin_demand_array != NULL)
 			Deallocate3DDynamicArray(g_origin_demand_array, g_number_of_zones, g_number_of_agent_types);
 
 		DeallocateLinkMemory4Simulation();
@@ -1762,8 +1762,8 @@ struct CNodeForwardStar{
 
 	CNodeForwardStar()
 	{
-		OutgoingLinkNoArray = nullptr;
-		OutgoingNodeNoArray = nullptr;
+		OutgoingLinkNoArray = NULL;
+		OutgoingNodeNoArray = NULL;
 		OutgoingLinkSize = 0;
 	}
 };
@@ -1849,54 +1849,65 @@ public:
 	~NetworkForSP()
 	{
 
-		if (m_SENodeList)  //1
+		if (m_SENodeList != NULL)  //1
 			delete m_SENodeList;
 
-		if (m_node_status_array)  //2
+		if (m_node_status_array != NULL)  //2
 			delete m_node_status_array;
 
-		if (m_label_time_array)  //3
+		if (m_label_time_array != NULL)  //3
 			delete m_label_time_array;
 
-		if (m_label_distance_array)  //4
+		if (m_label_distance_array != NULL)  //4
 			delete m_label_distance_array;
 
-		if (m_node_predecessor)  //5
+		if (m_node_predecessor != NULL)  //5
 			delete m_node_predecessor;
 
-		if (m_link_predecessor)  //6
+		if (m_link_predecessor != NULL)  //6
 			delete m_link_predecessor;
 
-		if (m_node_label_cost)  //7
+		if (m_node_label_cost != NULL)  //7
 			delete m_node_label_cost;
 
-	   	if (m_link_flow_volume_array)  //8
+
+	   if (m_link_flow_volume_array != NULL)  //8
 			delete m_link_flow_volume_array;
 
-		if (m_link_genalized_cost_array) //9
+
+		if (m_link_genalized_cost_array != NULL) //9
 			delete m_link_genalized_cost_array;
 		
-		if (m_link_outgoing_connector_zone_seq_no_array) //10
+		if (m_link_outgoing_connector_zone_seq_no_array != NULL) //10
 			delete m_link_outgoing_connector_zone_seq_no_array;
 
-		//Initialization for all non-origin nodes
-		for (int i = 0; i < assignment.g_number_of_nodes; i++) 
+
+		for (int i = 0; i < assignment.g_number_of_nodes; i++) //Initialization for all non-origin nodes
 		{
+
 			if (NodeForwardStarArray[i].OutgoingLinkSize > 0)
 			{
 				//delete NodeForwardStarArray[i].OutgoingLinkNoArray;
 				//delete NodeForwardStarArray[i].OutgoingNodeNoArray;
 			}
+
 		}
 
-		if (NodeForwardStarArray)
+
+		if (NodeForwardStarArray!=NULL)
 			delete NodeForwardStarArray;
+
+
+
 	}
+
+
 
 	bool bBuildNetwork;
 
 	void UpdateGeneralizedLinkCost()
 	{
+	
 		CLink* pLink;
 		for (int l = 0; l < g_link_vector.size(); l++)
 		{
@@ -1904,6 +1915,7 @@ public:
 			m_link_genalized_cost_array[l] = pLink->travel_time_per_period[tau] + pLink->route_choice_cost + pLink->toll / m_value_of_time * 60;  // *60 as 60 min per hour
 		//route_choice_cost 's unit is min
 		}
+	
 	}
 
 	void BuildNetwork(Assignment* p_assignment)
@@ -2835,7 +2847,7 @@ void g_ReadDemandFileBasedOnDemandFileList(Assignment& assignment)
 
 				int error_count = 0;
 				fopen_ss(&st, file_name.c_str(), "r");
-				if (st)
+				if (st != NULL)
 				{
 
 					bFileReady = true;
@@ -3509,9 +3521,10 @@ void g_ReadInputData(Assignment& assignment)
 	{
 		g_fout << "writing demand.csv.." << endl;
 
-		FILE* g_pFileODMatrix = nullptr;
+
+		FILE* g_pFileODMatrix = NULL;
 		fopen_ss(&g_pFileODMatrix, "demand.csv", "w");
-		if (!g_pFileODMatrix)
+		if (g_pFileODMatrix == NULL)
 		{
 			g_fout << "File demand.csv cannot be opened." << endl;
 			g_ProgramStop();
@@ -3540,17 +3553,22 @@ void g_ReadInputData(Assignment& assignment)
 						if (g_zone_vector[d].obs_attraction > 0)
 						{ 
 							float value = g_zone_vector[o].obs_production * g_zone_vector[d].obs_attraction / max(0.0001f, total_attraction);
-							fprintf(g_pFileODMatrix, "%d,%d,%.4f,\n", g_zone_vector[o].zone_id, g_zone_vector[d].zone_id, value);
-							// g_fout << "o= " << g_zone_vector[o].zone_id << " d= " << g_zone_vector[d].zone_id << ":" <<  value << endl;
+						fprintf(g_pFileODMatrix, "%d,%d,%.4f,\n", g_zone_vector[o].zone_id, g_zone_vector[d].zone_id, value);
+
+						// g_fout << "o= " << g_zone_vector[o].zone_id << " d= " << g_zone_vector[d].zone_id << ":" <<  value << endl;
 						}
 
 					}
 				}
 
 			}
+
+
 			fclose(g_pFileODMatrix);
+
 		}
 	}
+
 
 	g_fout << "number of zones = " << g_zone_vector.size() << endl;
 	// step 4: read link file 
@@ -3576,24 +3594,26 @@ void g_ReadInputData(Assignment& assignment)
 			if (assignment.g_node_id_to_seq_no_map.find(from_node_id) == assignment.g_node_id_to_seq_no_map.end())
 			{
 				g_fout << "Error: from_node_id " << from_node_id << " in file link.csv is not defined in node.csv." << endl;
-				//has not been defined
-				continue; 
+
+				continue; //has not been defined
 			}
 			if (assignment.g_node_id_to_seq_no_map.find(to_node_id) == assignment.g_node_id_to_seq_no_map.end())
 			{
 				g_fout << "Error: to_node_id " << to_node_id << " in file link.csv is not defined in node.csv." << endl;
-				//has not been defined
-				continue;
+				continue; //has not been defined
 			}
 
 			if (assignment.g_link_id_map.find(linkID) != assignment.g_link_id_map.end())
 			{
 				g_fout << "Error: link_id " << linkID.c_str() << " has been defined more than once. Please check link.csv." << endl;
+
 			}
+
 
 			int internal_from_node_seq_no = assignment.g_node_id_to_seq_no_map[from_node_id];  // map external node number to internal node seq no. 
 			int internal_to_node_seq_no = assignment.g_node_id_to_seq_no_map[to_node_id];
 
+			
 			CLink link;  // create a link object 
 
 			link.from_node_seq_no = internal_from_node_seq_no;
@@ -3604,6 +3624,7 @@ void g_ReadInputData(Assignment& assignment)
 
 			assignment.g_link_id_map[link.link_id] = 1;
 
+
 			parser_link.GetValueByFieldName("link_type", link.link_type);
 
 			string movement_str;
@@ -3613,7 +3634,9 @@ void g_ReadInputData(Assignment& assignment)
 			if (movement_str.size() > 0)  // and valid
 			{
 				int main_node_id = -1;
+
 				parser_link.GetValueByFieldName("main_node_id", main_node_id, true, false);
+
 
 				int NEMA_phase_number = 0;
 				parser_link.GetValueByFieldName("NEMA_phase_number", NEMA_phase_number, false, true);
@@ -3621,13 +3644,19 @@ void g_ReadInputData(Assignment& assignment)
 				link.movement_str = movement_str;
 				link.main_node_id = main_node_id;
 				link.NEMA_phase_number = NEMA_phase_number;
+
+
 			}
+
 
 			if (assignment.g_LinkTypeMap.find(link.link_type) == assignment.g_LinkTypeMap.end())
 			{
 				g_fout << "link type " << link.link_type << " in link.csv is not defined for link " << from_node_id << "->"<< to_node_id << " in link_type.csv" <<endl;
 				g_ProgramStop();
+
 			}
+
+			
 
 			if (assignment.g_LinkTypeMap[link.link_type].type_code == "c" && g_node_vector[internal_from_node_seq_no].zone_id >=0)
 			{
@@ -3638,6 +3667,8 @@ void g_ReadInputData(Assignment& assignment)
 			parser_link.GetValueByFieldName("toll", link.toll,false,false);
 			parser_link.GetValueByFieldName("additional_cost", link.route_choice_cost, false, false);
 
+			
+
 			float length = 1.0; // km or mile
 			float free_speed = 1.0;
 			float k_jam = 200;
@@ -3646,6 +3677,7 @@ void g_ReadInputData(Assignment& assignment)
 			float lane_capacity = 1800;
 			parser_link.GetValueByFieldName("length", length);
 			parser_link.GetValueByFieldName("free_speed", free_speed);
+
 
 			free_speed = max(0.1f, free_speed);
 
@@ -3656,10 +3688,13 @@ void g_ReadInputData(Assignment& assignment)
 			link.free_flow_travel_time_in_min = length / free_speed * 60;
 			link.traffic_flow_code = assignment.g_LinkTypeMap[link.link_type].traffic_flow_code;
 
+
 			if (link.traffic_flow_code >= 2)    //spatial queue and kinematic wave
 			{
 				link.spatial_capacity_in_vehicles = max(1.0f,length * number_of_lanes * k_jam);
 			}
+
+
 
 			if (link.traffic_flow_code == 3)    // kinematic wave
 			{
@@ -3675,6 +3710,7 @@ void g_ReadInputData(Assignment& assignment)
 
 			for (int tau = 0; tau < assignment.g_number_of_demand_periods; tau++)
 			{
+				
 				//setup default values
 				link.VDF_period[tau].capacity = lane_capacity * number_of_lanes;
 				link.VDF_period[tau].FFTT = length / free_speed * 60.0;  // 60.0 for 60 min per hour
@@ -3682,6 +3718,7 @@ void g_ReadInputData(Assignment& assignment)
 				link.VDF_period[tau].beta = 4;
 				link.VDF_period[tau].starting_time_slot_no = assignment.g_DemandPeriodVector[tau].starting_time_slot_no;
 				link.VDF_period[tau].ending_time_slot_no = assignment.g_DemandPeriodVector[tau].ending_time_slot_no;
+
 
 				int demand_period_id = assignment.g_DemandPeriodVector[tau].demand_period_id;
 				sprintf (VDF_field_name, "VDF_fftt%d", demand_period_id);
@@ -4298,10 +4335,14 @@ void update_link_travel_time_and_cost()
 		// step 1: travel time based on VDF
 		g_link_vector[l].CalculateTD_VDFunction();
 		
+
 		for (tau = 0; tau < assignment.g_DemandPeriodVector.size(); tau++)
 		{
+				
+
 			for (int at = 0; at < assignment.g_AgentTypeVector.size(); at++)
 			{
+
 				float PCE_agent_type = assignment.g_AgentTypeVector[at].PCE;
 
 				// step 2: marginal cost for SO
@@ -4332,12 +4373,14 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
 	float sub_total_gap_P_count = 0;
 	float sub_total_gap_A_count = 0;
 
+
 	// reset the link volume
 	for (l = 0; l < number_of_links; l++)
 	{
 		for (tau = 0; tau < assignment.g_number_of_demand_periods; tau++)
 		{
 			g_link_vector[l].flow_volume_per_period[tau] = 0; // used in travel time calculation
+
 		}
 	}
 	// reset the estimated production and attraction
@@ -4346,6 +4389,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
 		g_zone_vector[o].est_attraction = 0;
 		g_zone_vector[o].est_production = 0;
 	}
+
 
 		for (int at = 0; at < assignment.g_AgentTypeVector.size(); at++)  //m
 		{
@@ -4674,9 +4718,9 @@ void g_output_simulation_result(Assignment& assignment)
 	g_fout << "writing link_performance.csv.." << endl;
 
 	int b_debug_detail_flag = 0;
-	FILE* g_pFileLinkMOE = nullptr;
+	FILE* g_pFileLinkMOE = NULL;
 	fopen_ss(&g_pFileLinkMOE,"link_performance.csv", "w");
-	if (g_pFileLinkMOE == nullptr)
+	if (g_pFileLinkMOE == NULL)
 	{
 		g_fout << "File link_performance.csv cannot be opened." << endl;
 		g_ProgramStop();
@@ -4885,7 +4929,7 @@ void g_output_simulation_result(Assignment& assignment)
 	}
 	if (assignment.assignment_mode == 0)
 	{
-		FILE* g_pFileODMOE = nullptr;
+		FILE* g_pFileODMOE = NULL;
 		fopen_ss(&g_pFileODMOE, "agent.csv", "w");
 		fclose(g_pFileODMOE);
 	}
@@ -4894,9 +4938,9 @@ void g_output_simulation_result(Assignment& assignment)
 	g_fout << "writing agent.csv.." << endl;
 
 	float path_time_vector[_MAX_LINK_SIZE_IN_A_PATH];
-	FILE* g_pFileODMOE = nullptr;
+	FILE* g_pFileODMOE = NULL;
 	fopen_ss(&g_pFileODMOE,"agent.csv", "w");
-	if (g_pFileODMOE == nullptr)
+	if (g_pFileODMOE == NULL)
 	{
 		g_fout << "File agent.csv cannot be opened." << endl;
 		g_ProgramStop();
@@ -5183,9 +5227,9 @@ void g_output_simulation_result_for_signal_api(Assignment& assignment)
 	g_fout << "writing link_performance_sig.csv.." << endl;
 
 	int b_debug_detail_flag = 0;
-	FILE* g_pFileLinkMOE = nullptr;
+	FILE* g_pFileLinkMOE = NULL;
 	fopen_ss(&g_pFileLinkMOE, "link_performance_sig.csv", "w");
-	if (g_pFileLinkMOE == nullptr)
+	if (g_pFileLinkMOE == NULL)
 	{
 		g_fout << "File link_performance_sig.csv cannot be opened." << endl;
 		g_ProgramStop();
@@ -6021,19 +6065,19 @@ void Assignment::AllocateLinkMemory4Simulation()
 void Assignment::DeallocateLinkMemory4Simulation()
 {
 //	g_fout << "deallocate 2D dynamic memory m_LinkOutFlowCapacity..." << endl;
-	if(m_LinkOutFlowCapacity!=nullptr)
+	if(m_LinkOutFlowCapacity!=NULL)
 	DeallocateDynamicArray(m_LinkOutFlowCapacity , g_number_of_links, g_number_of_simulation_intervals);  //1
 //	g_fout << "deallocate 2D dynamic memory m_LinkCumulativeArrival..." << endl;
-	if(m_LinkCumulativeArrival !=nullptr)
+	if(m_LinkCumulativeArrival !=NULL)
 	DeallocateDynamicArray(m_LinkCumulativeArrival, g_number_of_links, g_number_of_simulation_intervals);  //2
 //	g_fout << "deallocate 2D dynamic memory m_LinkCumulativeDeparture..." << endl;
-	if (m_LinkCumulativeDeparture != nullptr)
+	if (m_LinkCumulativeDeparture != NULL)
 		DeallocateDynamicArray(m_LinkCumulativeDeparture, g_number_of_links, g_number_of_simulation_intervals); //3
 //	g_fout << "deallocate 2D dynamic memory m_LinkTDTravelTime..." << endl;
-	if (m_LinkTDTravelTime != nullptr)
+	if (m_LinkTDTravelTime != NULL)
 		DeallocateDynamicArray(m_LinkTDTravelTime, g_number_of_links, g_number_of_simulation_horizon_in_min); //3
 //	g_fout << "deallocate 2D dynamic memory m_LinkTDWaitingTime..." << endl;
-	if (m_LinkTDWaitingTime != nullptr)
+	if (m_LinkTDWaitingTime != NULL)
 		DeallocateDynamicArray(m_LinkTDWaitingTime, g_number_of_links, g_number_of_simulation_horizon_in_min); //4
 
 }

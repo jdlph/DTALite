@@ -1,4 +1,5 @@
 #ifndef GUARD_CONFIG_H
+#define GUARD_CONFIG_H
 
 #ifdef BUILD_EXE
     double network_assignment(int assignment_mode, int iteration_number, int column_updating_iterations);

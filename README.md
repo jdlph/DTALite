@@ -1,6 +1,6 @@
 # PythonDTALite
 
-The **dev branch** is an independent development from the master branch. It aims to provide a clean and common code base using modern C++ (mainly C++11 and C++14) for building both executable and shared library of DTALite across platforms. The C++ source files are from a private repos [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring), which will be made public once it is mature.
+This repos is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite). It aims to provide a clean and common code base using modern C++ (mainly C++11 and C++14) for building both executable and shared library of DTALite across platforms. The C++ source files are from a private repos [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring), which will be made public once it is mature.
 ## Step 1: White Paper and Application: 
 Zhou, Xuesong, and Jeffrey Taylor. "[DTALite: A queue-based mesoscopic traffic simulator for fast model evaluation and calibration.](https://www.tandfonline.com/doi/full/10.1080/23311916.2014.961345)" Cogent Engineering 1.1 (2014): 961345.
 

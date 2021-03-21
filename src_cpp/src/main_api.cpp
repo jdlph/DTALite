@@ -45,7 +45,6 @@ using std::map;
 using std::ifstream;
 using std::ofstream;
 using std::istringstream;
-using std::ostringstream;
 
 // some basic parameters setting
 
@@ -83,10 +82,6 @@ int g_log_odme = 0;
 int g_log_path = 0;
 
 // FILE* g_pFileOutputLog = nullptr;
-
-
-//below shows where the functions used in Agentlite.cpp come from!
-//Utility.cpp
 
 // definitions of CCSVParser member functions
 void CCSVParser::ConvertLineStringValueToIntegers()

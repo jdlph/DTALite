@@ -7,11 +7,6 @@
 #include <iostream>
 #include "teestream.h"
 
-using std::vector;
-using std::map;
-using std::string;
-using std::ifstream;
-
 class CCSVParser{
 public:
     char Delimiter;
@@ -68,9 +63,9 @@ void g_ProgramStop();
 void fopen_ss(FILE** file, const char* fileName, const char* mode);
 float g_read_float(FILE* f);
 
-vector<string> split(const string &s, const string &seperator);
-vector<float> g_time_parser(string str);
-string g_time_coding(float time_stamp);
+std::vector<std::string> split(const std::string &s, const std::string &seperator);
+std::vector<float> g_time_parser(std::string str);
+std::string g_time_coding(float time_stamp);
 int g_ParserIntSequence(std::string str, std::vector<int>& vect);
 
 #endif

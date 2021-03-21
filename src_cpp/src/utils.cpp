@@ -3,13 +3,16 @@
 #include <sstream>
 #include <iomanip>
 #include <string>
+#include <cstring>
 #include <vector>
-#include "utils.h"
 #include "teestream.h"
+#include "utils.h"
 
+using std::endl;
 using std::string;
 using std::vector;
 using std::ofstream;
+using std::istringstream;
 using std::ostringstream;
 
 teestream& dtalog()
@@ -22,7 +25,7 @@ teestream& dtalog()
 
 void g_ProgramStop()
 {
-    dtalog() << "STALite Program stops. Press any key to terminate. Thanks!" << std::endl;
+    dtalog() << "STALite Program stops. Press any key to terminate. Thanks!" << endl;
     getchar();
     exit(0);
 }
@@ -110,14 +113,6 @@ vector<string> split(const string &s, const string &seperator)
 
     return result;
 }
-//string test_str = "0300:30:120_0600:30:140";
-//
-//g_global_minute = g_time_parser(test_str);
-//
-//for (int i = 0; i < g_global_minute.size(); i++)
-//{
-//	g_fout << "The number of global minutes is: " << g_global_minute[i] << " minutes" << endl;
-//}
 
 vector<float> g_time_parser(string str)
 {
@@ -244,94 +239,20 @@ vector<float> g_time_parser(string str)
     return output_global_minute;
 }
 
-//vector<float> g_time_parser(vector<string>& inputstring)
-//{
-//	vector<float> output_global_minute;
-//
-//	for (int k = 0; k < inputstring.size(); k++)
-//	{
-//		vector<string> sub_string = split(inputstring[k], "_");
-//
-//		for (int i = 0; i < sub_string.size(); i++)
-//		{
-//			//HHMM
-//			//012345
-//			char hh1 = sub_string[i].at(0);
-//			char hh2 = sub_string[i].at(1);
-//			char mm1 = sub_string[i].at(2);
-//			char mm2 = sub_string[i].at(3);
-//
-//			float hhf1 = ((float)hh1 - 48);
-//			float hhf2 = ((float)hh2 - 48);
-//			float mmf1 = ((float)mm1 - 48);
-//			float mmf2 = ((float)mm2 - 48);
-//
-//			float hh = hhf1 * 10 * 60 + hhf2 * 60;
-//			float mm = mmf1 * 10 + mmf2;
-//			float global_mm_temp = hh + mm;
-//			output_global_minute.push_back(global_mm_temp);
-//		}
-//	}
-//
-//	return output_global_minute;
-//} // transform hhmm to minutes 
-
-// Peiheng, 02/02/21, inline?
 string g_time_coding(float time_stamp)
 {
-    int hour = time_stamp / 60;
-    int minute = time_stamp - hour * 60;
-    int second = (time_stamp - hour * 60 - minute)*60;
+    int hour = static_cast<int>(time_stamp / 60);
+    int minute = static_cast<int>(time_stamp - hour * 60);
+    int second = static_cast<int>((time_stamp - hour * 60 - minute) * 60);
 
     ostringstream strm;
     strm.fill('0');
     strm << std::setw(2) << hour << std::setw(2) << minute /*<< ":" << setw(2) << second*/;
 
     return strm.str();
-} // transform hhmm to minutes 
+}
 
-//void ReadLinkTollScenarioFile(Assignment& assignment)
-//{
-//
-//	for (unsigned li = 0; li < g_link_vector.size(); li++)
-//	{
-//
-//		g_link_vector[li].TollMAP.erase(g_link_vector[li].TollMAP.begin(), g_link_vector[li].TollMAP.end()); // remove all previouly read records
-//	}
-//
-//	// generate toll based on demand type code in input_link.csv file
-//	int demand_flow_type_count = 0;
-//
-//	for (unsigned li = 0; li < g_link_vector.size(); li++)
-//	{
-//		if (g_link_vector[li].agent_type_code.size() >= 1)
-//		{  // with data string
-//
-//			std::string agent_type_code = g_link_vector[li].agent_type_code;
-//
-//			vector<float> TollRate;
-//			for (int at = 0; at < assignment.g_AgentTypeVector.size(); at++)
-//			{
-//				CString number;
-//				number.Format(_T("%d"), at);
-//
-//				std::string str_number = CString2StdString(number);
-//				if (agent_type_code.find(str_number) == std::string::npos)   // do not find this number
-//				{
-//					g_link_vector[li].TollMAP[at] = 999;
-//					demand_flow_type_count++;
-//				}
-//				else
-//				{
-//					g_link_vector[li].TollMAP[at] = 0;
-//				}
-//
-//			}  //end of pt
-//		}
-//	}
-//}
-
-int g_ParserIntSequence(std::string str, std::vector<int>& vect)
+int g_ParserIntSequence(std::string str, vector<int>& vect)
 {
     std::stringstream ss(str);
     int i;

@@ -164,8 +164,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="assignment.h" />
-    <ClInclude Include="MathLibrary.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>

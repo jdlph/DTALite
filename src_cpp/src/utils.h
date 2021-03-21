@@ -58,18 +58,18 @@ public:
     bool ReadRecord_Section();
     std::vector<std::string> ParseLine(std::string line);
     template <class T> bool GetValueByFieldName(std::string field_name, T& value, bool required_field = true, bool NonnegativeFlag = true);
-    bool GetValueByFieldName(std::string field_name, std::string& value, bool required_field =true);
+    bool GetValueByFieldName(std::string field_name, std::string& value, bool required_field = true);
 };
 
+// utilities functions
 teestream& dtalog();
-
 void g_ProgramStop();
 
 void fopen_ss(FILE** file, const char* fileName, const char* mode);
 float g_read_float(FILE* f);
 
 vector<string> split(const string &s, const string &seperator);
-vector<float> g_time_parser(string str);vector<float> g_time_parser(string str);
+vector<float> g_time_parser(string str);
 string g_time_coding(float time_stamp);
 int g_ParserIntSequence(std::string str, std::vector<int>& vect);
 

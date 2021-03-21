@@ -32,8 +32,8 @@
 #include <sstream>
 #include <iomanip>
 #include <cstring>
-#include "utils.h"
 #include "config.h"
+#include "utils.h"
 
 using std::max;
 using std::min;
@@ -88,6 +88,7 @@ int g_log_path = 0;
 //below shows where the functions used in Agentlite.cpp come from!
 //Utility.cpp
 
+// definitions of CCSVParser member functions
 void CCSVParser::ConvertLineStringValueToIntegers()
 {
     LineIntegerVector.clear();
@@ -112,7 +113,7 @@ bool CCSVParser::OpenCSVFile(string fileName, bool b_required)
         {
             string s;
             std::getline(inFile, s);
-            std::vector<string> FieldNames = ParseLine(s);
+            vector<string> FieldNames = ParseLine(s);
 
             for (size_t i = 0;i < FieldNames.size();i++)
             {
@@ -169,18 +170,16 @@ bool CCSVParser::ReadRecord()
     }
 }
 
-
 bool CCSVParser::ReadSectionHeader(string s)
 {
     //skip // data 
-
     Headers.clear();
     FieldsIndices.clear();
 
     if (s.length() == 0)
         return true;
 
-    std::vector<string> FieldNames = ParseLine(s);
+    vector<string> FieldNames = ParseLine(s);
 
     for (size_t i = 0; i < FieldNames.size(); i++)
     {
@@ -224,7 +223,6 @@ bool CCSVParser::ReadRecord_Section()
                 //re-read section header
                 ReadSectionHeader(s);
                 std::getline(inFile, s);
-
             }
             LineFieldsValue = ParseLine(s);
             return true;
@@ -248,9 +246,9 @@ bool CCSVParser::ReadRecord_Section()
     }
 }
 
-std::vector<string> CCSVParser::ParseLine(string line)
+vector<string> CCSVParser::ParseLine(string line)
 {
-    std::vector<string> SeperatedStrings;
+    vector<string> SeperatedStrings;
     string subStr;
 
     if (line.length() == 0)
@@ -327,20 +325,18 @@ std::vector<string> CCSVParser::ParseLine(string line)
                 }
             }
         }
-
     }
     return SeperatedStrings;
 }
 
-template <class T> bool CCSVParser::GetValueByFieldName(string field_name, T& value, bool required_field, bool NonnegativeFlag)
+template <class T> 
+bool CCSVParser::GetValueByFieldName(string field_name, T& value, bool required_field, bool NonnegativeFlag)
 {
-
     if (FieldsIndices.find(field_name) == FieldsIndices.end())
     {
         if (required_field)
         {
             dtalog() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << endl;
-
             g_ProgramStop();
         }
         return false;
@@ -379,8 +375,8 @@ template <class T> bool CCSVParser::GetValueByFieldName(string field_name, T& va
         {
             if(NonnegativeFlag)
             { 
-            if (converted_value < 0)
-                converted_value = 0;
+                if (converted_value < 0)
+                    converted_value = 0;
             }
         }
 
@@ -396,7 +392,6 @@ bool CCSVParser::GetValueByFieldName(string field_name, string& value, bool requ
         if (required_field)
         {
             dtalog() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
-
             g_ProgramStop();
         }
         return false;

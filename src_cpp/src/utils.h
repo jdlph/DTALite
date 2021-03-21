@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <iostream>
+#include "teestream.h"
 
 using std::vector;
 using std::map;
@@ -30,18 +31,14 @@ public:
     std::vector<std::string> Headers;
     std::map<std::string, int> FieldsIndices;
 
-    CCSVParser(void)
+    CCSVParser() : Delimiter{ ',' }, IsFirstLineHeader{ true }, m_bSkipFirstLine{ false }, m_bDataHubSingleCSVFile{ false }, m_bLastSectionRead{ false }
     {
-        Delimiter = ',';
-        IsFirstLineHeader = true;
-        m_bSkipFirstLine = false;
-        m_bDataHubSingleCSVFile = false;
-        m_bLastSectionRead = false;
     }
 
-    ~CCSVParser(void)
+    ~CCSVParser()
     {
-        if (inFile.is_open()) inFile.close();
+        if (inFile.is_open()) 
+            inFile.close();
     }
 
     // inline member functions
@@ -49,11 +46,10 @@ public:
     {
         return Headers;
     }
-
     void CloseCSVFile()
     {
         inFile.close();
-    };
+    }
 
     void ConvertLineStringValueToIntegers();
     bool OpenCSVFile(std::string fileName, bool b_required);
@@ -65,6 +61,16 @@ public:
     bool GetValueByFieldName(std::string field_name, std::string& value, bool required_field =true);
 };
 
+teestream& dtalog();
+
 void g_ProgramStop();
+
+void fopen_ss(FILE** file, const char* fileName, const char* mode);
+float g_read_float(FILE* f);
+
+vector<string> split(const string &s, const string &seperator);
+vector<float> g_time_parser(string str);vector<float> g_time_parser(string str);
+string g_time_coding(float time_stamp);
+int g_ParserIntSequence(std::string str, std::vector<int>& vect);
 
 #endif

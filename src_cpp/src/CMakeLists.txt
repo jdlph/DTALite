@@ -18,8 +18,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # enable OpenMP
-if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    set(CMAKE_CXX_FLAGS "-Xpreprocessor -fopenmp -lomp fpic")
+if (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
+    set(CMAKE_CXX_FLAGS "-Xpreprocessor -fopenmp -fpic")
 else()
     set(CMAKE_CXX_FLAGS "-fopenmp -fpic")
 endif()

@@ -7,31 +7,28 @@
  * More about "How to use GNU licenses for your own software"
  * http://www.gnu.org/licenses/gpl-howto.html 
  */
+
 #ifdef _WIN32
 #include "pch.h"
 #endif
 
-// Peiheng, 02/03/21, remove them later
-#pragma warning(disable : 4305 4267 4018) 
-// stop warning: "conversion from 'int' to 'float', possible loss of data"
-#pragma warning(disable: 4244)
-
 #include <iostream>
 #include <fstream>
-#include <list> 
-#include <omp.h>
-#include <algorithm>
-#include <time.h>
-#include <functional>
-#include <cstdio>   
-#include <cmath>
-#include <stack>
-#include <string>
-#include <vector>
-#include <map>
 #include <sstream>
 #include <iomanip>
+#include <string>
 #include <cstring>
+#include <cstdio>
+#include <ctime>
+#include <cmath>
+#include <algorithm>
+#include <functional>
+#include <stack>  
+#include <list> 
+#include <vector>
+#include <map>
+#include <omp.h>
+
 #include "config.h"
 #include "utils.h"
 
@@ -77,343 +74,15 @@ constexpr auto LCG_M = 65521;  // it should be 2^32, but we use a small 16-bit n
 
 constexpr auto STRING_LENGTH_PER_LINE = 50000;
 
+char str_buffer[STRING_LENGTH_PER_LINE];
+
+// Peiheng, 03/22/21, we shall use these values in dtalog()
+// consider replacing them later
 int g_debug_level = 0;
 int g_log_odme = 0;
 int g_log_path = 0;
 
 // FILE* g_pFileOutputLog = nullptr;
-
-// definitions of CCSVParser member functions
-void CCSVParser::ConvertLineStringValueToIntegers()
-{
-    LineIntegerVector.clear();
-    for (unsigned i = 0; i < LineFieldsValue.size(); ++i)
-    {
-        string si = LineFieldsValue[i];
-        int value = atoi(si.c_str());
-
-        if (value >= 1)
-            LineIntegerVector.push_back(value);
-    }
-}
-
-bool CCSVParser::OpenCSVFile(string fileName, bool b_required)
-{
-    mFileName = fileName;
-    inFile.open(fileName.c_str());
-
-    if (inFile.is_open())
-    {
-        if (IsFirstLineHeader)
-        {
-            string s;
-            std::getline(inFile, s);
-            vector<string> FieldNames = ParseLine(s);
-
-            for (size_t i = 0;i < FieldNames.size();i++)
-            {
-                string tmp_str = FieldNames.at(i);
-                size_t start = tmp_str.find_first_not_of(" ");
-
-                string name;
-                if (start == string::npos)
-                {
-                    name = "";
-                }
-                else
-                {
-                    name = tmp_str.substr(start);
-                    //TRACE("%s,", name.c_str());
-                }
-                FieldsIndices[name] = (int)i;
-            }
-        }
-        return true;
-    }
-    else
-    {
-        if (b_required)
-        {
-            dtalog() << "File " << fileName << " does not exist. Please check." << std::endl;
-            //g_ProgramStop();
-        }
-        return false;
-    }
-}
-
-bool CCSVParser::ReadRecord()
-{
-    LineFieldsValue.clear();
-
-    if (inFile.is_open())
-    {
-        string s;
-        std::getline(inFile, s);
-        if (s.length() > 0)
-        {
-            LineFieldsValue = ParseLine(s);
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool CCSVParser::ReadSectionHeader(string s)
-{
-    //skip // data 
-    Headers.clear();
-    FieldsIndices.clear();
-
-    if (s.length() == 0)
-        return true;
-
-    vector<string> FieldNames = ParseLine(s);
-
-    for (size_t i = 0; i < FieldNames.size(); i++)
-    {
-        string tmp_str = FieldNames.at(i);
-        size_t start = tmp_str.find_first_not_of(" ");
-
-        string name;
-        if (start == string::npos)
-        {
-            name = "";
-        }
-        else
-        {
-            name = tmp_str.substr(start);
-        }
-        Headers.push_back(name);
-        FieldsIndices[name] = (int)i;
-    }
-    return true;
-}
-
-bool CCSVParser::ReadRecord_Section()
-{
-    LineFieldsValue.clear();
-
-    if (inFile.is_open())
-    {
-        string s;
-        std::getline(inFile, s);
-        if (s.length() > 0)
-        {
-            if(s.find("[") != string::npos)  // synchro single csv file
-            {
-                LineFieldsValue = ParseLine(s);
-
-                if (LineFieldsValue.size() >= 1)
-                {
-                    SectionName = LineFieldsValue[0];
-                }
-
-                //re-read section header
-                ReadSectionHeader(s);
-                std::getline(inFile, s);
-            }
-            LineFieldsValue = ParseLine(s);
-            return true;
-        }
-        else
-        {
-            if (m_bLastSectionRead)  // reach the last section
-                return false;
-            else
-            {
-                if (inFile.eof())
-                    return false;
-                else
-                    return true;
-            }
-        }
-    }
-    else
-    {
-        return false;
-    }
-}
-
-vector<string> CCSVParser::ParseLine(string line)
-{
-    vector<string> SeperatedStrings;
-    string subStr;
-
-    if (line.length() == 0)
-        return SeperatedStrings;
-
-    std::istringstream ss(line);
-
-    if (line.find_first_of('"') == string::npos)
-    {
-        while (std::getline(ss, subStr, Delimiter))
-        {
-            SeperatedStrings.push_back(subStr);
-        }
-
-        if (line.at(line.length() - 1) == ',')
-        {
-            SeperatedStrings.push_back("");
-        }
-    }
-    else
-    {
-        while (line.length() > 0)
-        {
-            size_t n1 = line.find_first_of(',');
-            size_t n2 = line.find_first_of('"');
-
-            if (n1 == string::npos && n2 == string::npos) //last field without double quotes
-            {
-                subStr = line;
-                SeperatedStrings.push_back(subStr);
-                break;
-            }
-
-            if (n1 == string::npos && n2 != string::npos) //last field with double quotes
-            {
-                size_t n3 = line.find_first_of('"', n2 + 1); // second double quote
-
-                //extract content from double quotes
-                subStr = line.substr(n2 + 1, n3 - n2 - 1);
-                SeperatedStrings.push_back(subStr);
-
-                break;
-            }
-
-            if (n1 != string::npos && (n1 < n2 || n2 == string::npos))
-            {
-                subStr = line.substr(0, n1);
-                SeperatedStrings.push_back(subStr);
-                if (n1 < line.length() - 1)
-                {
-                    line = line.substr(n1 + 1);
-                }
-                else // comma is the last char in the line string, push an empty string to the back of vector
-                {
-                    SeperatedStrings.push_back("");
-                    break;
-                }
-            }
-
-            if (n1 != string::npos && n2 != string::npos && n2 < n1)
-            {
-                size_t n3 = line.find_first_of('"', n2 + 1); // second double quote
-                subStr = line.substr(n2 + 1, n3 - n2 - 1);
-                SeperatedStrings.push_back(subStr);
-                size_t idx = line.find_first_of(',', n3 + 1);
-
-                if (idx != string::npos)
-                {
-                    line = line.substr(idx + 1);
-                }
-                else
-                {
-                    break;
-                }
-            }
-        }
-    }
-    return SeperatedStrings;
-}
-
-template <class T> 
-bool CCSVParser::GetValueByFieldName(string field_name, T& value, bool required_field, bool NonnegativeFlag)
-{
-    if (FieldsIndices.find(field_name) == FieldsIndices.end())
-    {
-        if (required_field)
-        {
-            dtalog() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << endl;
-            g_ProgramStop();
-        }
-        return false;
-    }
-    else
-    {
-        if (LineFieldsValue.size() == 0)
-        {
-            return false;
-        }
-
-        int size = (int)(LineFieldsValue.size());
-        if (FieldsIndices[field_name] >= size)
-        {
-            return false;
-        }
-
-        string str_value = LineFieldsValue[FieldsIndices[field_name]];
-
-        if (str_value.length() <= 0)
-        {
-            return false;
-        }
-
-        istringstream ss(str_value);
-
-        T converted_value;
-        ss >> converted_value;
-
-        if (/*!ss.eof() || */ ss.fail())
-        {
-            return false;
-        }
-
-        if (required_field)
-        {
-            if(NonnegativeFlag)
-            { 
-                if (converted_value < 0)
-                    converted_value = 0;
-            }
-        }
-
-        value = converted_value;
-        return true;
-    }
-}
-
-bool CCSVParser::GetValueByFieldName(string field_name, string& value, bool required_field)
-{
-    if (FieldsIndices.find(field_name) == FieldsIndices.end())
-    {
-        if (required_field)
-        {
-            dtalog() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
-            g_ProgramStop();
-        }
-        return false;
-    }
-    else
-    {
-        if (LineFieldsValue.size() == 0)
-        {
-            return false;
-        }
-
-        unsigned int index = FieldsIndices[field_name];
-        if (index >= LineFieldsValue.size())
-        {
-            return false;
-        }
-        string str_value = LineFieldsValue[index];
-
-        if (str_value.length() <= 0)
-        {
-            return false;
-        }
-
-        value = str_value;
-        return true;
-    }
-}
 
 template <typename T>
 T** AllocateDynamicArray(int nRows, int nCols)
@@ -589,7 +258,6 @@ void Deallocate4DDynamicArray(T**** dArray, int nM, int nX, int nY)
 
 class CDemand_Period {
 public:
-
     CDemand_Period() : demand_period{ 0 }, starting_time_slot_no{ 0 }, ending_time_slot_no{ 0 }
     {
     }
@@ -652,7 +320,6 @@ public:
     string type_code;
 };
 
-
 class CColumnPath {
 public:
     CColumnPath() : path_node_vector{ nullptr }, path_link_vector{ nullptr }, path_seq_no{ 0 },
@@ -665,8 +332,8 @@ public:
     {
         if (m_node_size >= 1)
         {
-            delete path_node_vector;
-            delete path_link_vector;
+            delete[] path_node_vector;
+            delete[] path_link_vector;
         }
     }
 
@@ -858,9 +525,9 @@ public:
     {
         // Peiheng, 02/02/21, it is OK to delete nullptr
         if (m_Veh_LinkArrivalTime_in_simu_interval) 
-            delete m_Veh_LinkArrivalTime_in_simu_interval;
+            delete[] m_Veh_LinkArrivalTime_in_simu_interval;
         if (m_Veh_LinkDepartureTime_in_simu_interval) 
-            delete m_Veh_LinkDepartureTime_in_simu_interval;
+            delete[] m_Veh_LinkDepartureTime_in_simu_interval;
 
         m_Veh_LinkArrivalTime_in_simu_interval = nullptr;
         m_Veh_LinkDepartureTime_in_simu_interval = nullptr;
@@ -953,7 +620,6 @@ public:
         g_DemandGlobalMultiplier = 1.0f;
     }
 
-
     int get_in_memory_time(int t)
     {
         return t % g_number_of_in_memory_simulation_intervals;
@@ -996,7 +662,6 @@ public:
     // from integer to integer map zone_id to zone_seq_no
     std::map<int, int> g_zoneid_to_zone_seq_no_mapping;
     std::map<string, int> g_link_id_map;
-
 
     std::vector<CDemand_Period> g_DemandPeriodVector;
     int g_LoadingStartTimeInMin;
@@ -1067,7 +732,7 @@ public:
         float lambda = hourly_per_lane_volume;
         float mu = _default_saturation_flow_rate; //default saturation flow rates
         float s_bar = 1.0 / 60.0 * red * red / (2*cycle_length); // 60.0 is used to convert sec to min
-        float uniform_delay = s_bar / max(1 - lambda / mu, 0.1f) ; 
+        float uniform_delay = s_bar / max(1 - lambda / mu, 0.1f); 
 
         return uniform_delay;
     }
@@ -1155,7 +820,7 @@ public:
             // derive t0 and t3 based on congestion duration p
             int t2 = m * (t3 - t0) + t0;
             //tt_relative is relative time
-            for (int tt_relative = 0; tt_relative <= L; tt_relative++)
+            for (int tt_relative = 0; tt_relative <= L; ++tt_relative)
             {
                 //absolute time index
                 int time_abs = starting_time_slot_no + tt_relative;
@@ -1168,7 +833,7 @@ public:
                     travel_time[time_abs] = FFTT_in_hour;  // per hour
                 }
 
-                if (time_abs >= t0 && time_abs <= t3 && t3>t0)
+                if (time_abs >= t0 && time_abs <= t3 && t3 > t0)
                 {
                     float t_ph = time_abs / (60.0/ MIN_PER_TIMESLOT);
                     float t0_ph = t0 / (60.0 / MIN_PER_TIMESLOT);
@@ -1246,7 +911,6 @@ public:
     float travel_time[_MAX_TIMESLOT_PerPeriod];
 };
 
-
 class CLink
 {
 public:
@@ -1261,15 +925,14 @@ public:
             flow_volume_per_period[tau] = 0;
             queue_length_perslot[tau] = 0;
             travel_time_per_period[tau] = 0;
-
-            for(int at = 0; at < _MAX_AGNETTYPES; ++at)
-                volume_per_period_per_at[tau][at] = 0;
-
             TDBaseTT[tau] = 0;
             TDBaseCap[tau] = 0;
             TDBaseFlow[tau] = 0;
             TDBaseQueue[tau] = 0;
             //cost_perhour[tau] = 0;
+
+            for(int at = 0; at < _MAX_AGNETTYPES; ++at)
+                volume_per_period_per_at[tau][at] = 0;
         }
     }
 
@@ -1289,12 +952,10 @@ public:
         return (flow_volume_per_period[tau] + TDBaseFlow[tau]) / max(0.00001f, TDBaseCap[tau]);
     }
 
-
     float get_speed(int tau)
     {
         return length / max(travel_time_per_period[tau], 0.0001f) * 60;  // per hour
     }
-
 
     void calculate_marginal_cost_for_agent_type(int tau, int agent_type_no, float PCE_agent_type)
     {
@@ -1407,7 +1068,6 @@ public:
     int time_interval_no;
 };
 
-
 class CNode
 {
 public:
@@ -1474,9 +1134,7 @@ public:
     std::vector<int> m_activity_node_vector;
 };
 
-
 std::vector<COZone> g_zone_vector;
-
 
 class CAGBMAgent
 {
@@ -1506,6 +1164,13 @@ struct CNodeForwardStar{
     {
     }
 
+    // Peiheng, 03/22/21, release memory
+    ~CNodeForwardStar()
+    {
+        delete[] OutgoingLinkNoArray;
+        delete[] OutgoingNodeNoArray;
+    }
+
     int* OutgoingLinkNoArray;
     int* OutgoingNodeNoArray;
     int OutgoingLinkSize;
@@ -1516,6 +1181,44 @@ class NetworkForSP  // mainly for shortest path calculation
 public:
     NetworkForSP() : temp_path_node_vector_size{ 1000 }, m_value_of_time{ 10 }, bBuildNetwork{ false }, m_memory_block_no{ 0 }
     {
+    }
+
+    ~NetworkForSP()
+    {
+        if (m_SENodeList)  //1
+            delete[] m_SENodeList;
+
+        if (m_node_status_array)  //2
+            delete[] m_node_status_array;
+
+        if (m_label_time_array)  //3
+            delete[] m_label_time_array;
+
+        if (m_label_distance_array)  //4
+            delete[] m_label_distance_array;
+
+        if (m_node_predecessor)  //5
+            delete[] m_node_predecessor;
+
+        if (m_link_predecessor)  //6
+            delete[] m_link_predecessor;
+
+        if (m_node_label_cost)  //7
+            delete[] m_node_label_cost;
+
+        if (m_link_flow_volume_array)  //8
+            delete[] m_link_flow_volume_array;
+
+        if (m_link_genalized_cost_array) //9
+            delete[] m_link_genalized_cost_array;
+        
+        if (m_link_outgoing_connector_zone_seq_no_array) //10
+            delete[] m_link_outgoing_connector_zone_seq_no_array;
+
+        // Peiheng, 03/22/21, memory release on OutgoingLinkNoArray and OutgoingNodeNoArray
+        // is taken care by the destructor of CNodeForwardStar
+        if (NodeForwardStarArray)
+            delete[] NodeForwardStarArray;
     }
 
     int temp_path_node_vector_size;
@@ -1586,53 +1289,6 @@ public:
         m_link_outgoing_connector_zone_seq_no_array = new int[number_of_links]; //10
     }
 
-    ~NetworkForSP()
-    {
-        if (m_SENodeList)  //1
-            delete m_SENodeList;
-
-        if (m_node_status_array)  //2
-            delete m_node_status_array;
-
-        if (m_label_time_array)  //3
-            delete m_label_time_array;
-
-        if (m_label_distance_array)  //4
-            delete m_label_distance_array;
-
-        if (m_node_predecessor)  //5
-            delete m_node_predecessor;
-
-        if (m_link_predecessor)  //6
-            delete m_link_predecessor;
-
-        if (m_node_label_cost)  //7
-            delete m_node_label_cost;
-
-        if (m_link_flow_volume_array)  //8
-            delete m_link_flow_volume_array;
-
-        if (m_link_genalized_cost_array) //9
-            delete m_link_genalized_cost_array;
-        
-        if (m_link_outgoing_connector_zone_seq_no_array) //10
-            delete m_link_outgoing_connector_zone_seq_no_array;
-
-        // Peiheng, 02/02/21, useless block
-        // Initialization for all non-origin nodes
-        for (int i = 0; i < assignment.g_number_of_nodes; ++i)
-        {
-            if (NodeForwardStarArray[i].OutgoingLinkSize > 0)
-            {
-                //delete NodeForwardStarArray[i].OutgoingLinkNoArray;
-                //delete NodeForwardStarArray[i].OutgoingNodeNoArray;
-            }
-        }
-
-        if (NodeForwardStarArray)
-            delete NodeForwardStarArray;
-    }
-
     void UpdateGeneralizedLinkCost()
     {
         for (int i = 0; i < g_link_vector.size(); ++i)
@@ -1684,7 +1340,7 @@ public:
             int node_seq_no = g_node_vector[i].node_seq_no;
             NodeForwardStarArray[node_seq_no].OutgoingLinkSize = outgoing_link_size;
             
-            if(outgoing_link_size>=1)
+            if(outgoing_link_size >= 1)
             { 
                 NodeForwardStarArray[node_seq_no].OutgoingLinkNoArray = new int[outgoing_link_size];
                 NodeForwardStarArray[node_seq_no].OutgoingNodeNoArray = new int[outgoing_link_size];
@@ -1707,7 +1363,7 @@ public:
                 if (g_node_vector[i].zone_org_id > 0) // for each physical node
                 { // we need to make sure we only create two way connectors between nodes and zones 
                     dtalog() << "node id= " << g_node_vector[i].node_id << " with zone id " << g_node_vector[i].zone_org_id << "and "
-                           << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
+                             << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
 
                     for (int j = 0; j < NodeForwardStarArray[i].OutgoingLinkSize; j++)
                     {
@@ -1720,7 +1376,7 @@ public:
                     if (g_debug_level == 3)
                     {
                         dtalog() << "node id= " << g_node_vector[i].node_id << " with "
-                               << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
+                                 << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
 
                         for (int j = 0; j < NodeForwardStarArray[i].OutgoingLinkSize; ++j)
                         {
@@ -1791,13 +1447,12 @@ public:
     //		m_SENodeList[tempFront] = -1;
     //	}
 
-
     //major function: update the cost for each node at each SP tree, using a stack from the origin structure 
 
     void backtrace_shortest_path_tree(Assignment& assignment, int iteration_number, int o_node_index);
 
     //major function 2: // time-dependent label correcting algorithm with double queue implementation
-    float optimal_label_correcting(int processor_id, Assignment* p_assignment, int iteration_k, int o_node_index, int d_node_no  = -1, bool pure_travel_time_cost = false)
+    float optimal_label_correcting(int processor_id, Assignment* p_assignment, int iteration_k, int o_node_index, int d_node_no = -1, bool pure_travel_time_cost = false)
     {	
         // g_debugging_flag = 1;
         int SE_loop_count = 0;
@@ -1872,7 +1527,7 @@ public:
             if (g_log_path >= 2)
             { 
                 dtalog() << "SP:scan SE node: " << g_node_vector[from_node].node_id << " with " 
-                << NodeForwardStarArray[from_node].OutgoingLinkSize  << " outgoing link(s). "<< endl;
+                         << NodeForwardStarArray[from_node].OutgoingLinkSize  << " outgoing link(s). "<< endl;
             }
             //scan all outbound nodes of the current node
             
@@ -1929,7 +1584,7 @@ public:
                 if (g_log_path)
                 {
                     dtalog() << "SP:  checking from node " << g_node_vector[from_node].node_id  
-                           << "  to node" << g_node_vector[to_node].node_id << " cost = " << new_to_node_cost << endl;
+                             << "  to node" << g_node_vector[to_node].node_id << " cost = " << new_to_node_cost << endl;
                 }
 
                 if (new_to_node_cost < m_node_label_cost[to_node]) // we only compare cost at the downstream node ToID at the new arrival time t
@@ -1937,7 +1592,7 @@ public:
                     if (g_log_path)
                     {
                         dtalog() << "SP:  updating node: " << g_node_vector[to_node].node_id << " current cost:" << m_node_label_cost[to_node] 
-                               << " new cost " << new_to_node_cost << endl;
+                                 << " new cost " << new_to_node_cost << endl;
                     }
 
                     // update cost label and node/time predecessor
@@ -1952,7 +1607,7 @@ public:
                     if (g_log_path)
                     {
                         dtalog() << "SP: add node " << g_node_vector[to_node].node_id << " new cost:" << new_to_node_cost 
-                               << " into SE List " << g_node_vector[to_node].node_id << endl;
+                                 << " into SE List " << g_node_vector[to_node].node_id << endl;
                     }
 
                     // deque updating rule for m_node_status_array
@@ -2003,7 +1658,7 @@ public:
         if (g_log_path)
         { 
             dtalog() << "SPtree at iteration k = " << iteration_k <<  " origin node: " 
-                   << g_node_vector[origin_node].node_id  << endl;
+                     << g_node_vector[origin_node].node_id  << endl;
 
             //Initialization for all non-origin nodes
             for (int i = 0; i < p_assignment->g_number_of_nodes; ++i)
@@ -2017,7 +1672,7 @@ public:
                 if(m_node_label_cost[i] < 9999)
                 { 
                     dtalog() << "SP node: " << g_node_vector[i].node_id << " label cost " << m_node_label_cost[i] << "time "
-                           << m_label_time_array[i] << "node_pred_id " << node_pred_id << endl;
+                             << m_label_time_array[i] << "node_pred_id " << node_pred_id << endl;
                 }
             }
         }
@@ -2091,11 +1746,8 @@ public:
 };
 
 
-
 std::vector<NetworkForSP*> g_NetworkForSP_vector;
-
 NetworkForSP g_RoutingNetwork;
-
 
 
 void g_ReadDemandFileBasedOnDemandFileList(Assignment& assignment)
@@ -3054,7 +2706,7 @@ void g_ReadInputData(Assignment& assignment)
             { 
                 // we need to make sure we only create two way connectors between nodes and zones 
                 dtalog() << "node id= " << g_node_vector[i].node_id << " with zone id " << g_node_vector[i].zone_org_id << "and "
-                    << g_node_vector[i].m_outgoing_link_seq_no_vector.size() << " outgoing links." << endl;
+                         << g_node_vector[i].m_outgoing_link_seq_no_vector.size() << " outgoing links." << endl;
                 for (int j = 0; j < g_node_vector[i].m_outgoing_link_seq_no_vector.size(); ++j)
                 {
                     int link_seq_no = g_node_vector[i].m_outgoing_link_seq_no_vector[j];
@@ -3129,7 +2781,7 @@ void g_ReadInputData(Assignment& assignment)
 
     // for testing
     cout << "g_ReadInputData" <<endl;
-};
+}
 
 void g_reload_service_arc_data(Assignment& assignment)
 {
@@ -3270,7 +2922,6 @@ void g_reload_service_arc_data(Assignment& assignment)
     {
         while (parser.ReadRecord_Section())
         {
-
             if (parser.SectionName == "[capacity_scenario]")
             {
                 int from_node_id = 0;
@@ -3428,7 +3079,7 @@ void g_reset_and_update_link_volume_based_on_columns(int number_of_links, int it
         }
     }
 
-    if(iteration_index>=0)
+    if(iteration_index >= 0)
     {
         for (int at = 0; at < assignment.g_AgentTypeVector.size(); ++at)  //m
         {
@@ -3646,9 +3297,9 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
             if (g_debug_level == 2)
             { 
                 dtalog() << "link " << g_node_vector [g_link_vector[i].from_node_seq_no].node_id
-                       << "->" << g_node_vector[g_link_vector[i].to_node_seq_no].node_id
-                       << "obs:, " << g_link_vector[i].obs_count << "est:, " << g_link_vector[i].flow_volume_per_period[tau]
-                       << "dev:," << g_link_vector[i].est_count_dev << endl;
+                         << "->" << g_node_vector[g_link_vector[i].to_node_seq_no].node_id
+                         << "obs:, " << g_link_vector[i].obs_count << "est:, " << g_link_vector[i].flow_volume_per_period[tau]
+                         << "dev:," << g_link_vector[i].est_count_dev << endl;
             }
             total_gap += abs(g_link_vector[i].est_count_dev);
             sub_total_gap_link_count += g_link_vector[i].est_count_dev / g_link_vector[i].obs_count;
@@ -3664,7 +3315,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
             if (g_debug_level == 2)
             {
                 dtalog() << "zone " << g_zone_vector[orig].zone_id << "A: obs:" << g_zone_vector[orig].obs_attraction
-                       << ",est:," << g_zone_vector[orig].est_attraction << ",dev:," << g_zone_vector[orig].est_attraction_dev << endl;
+                         << ",est:," << g_zone_vector[orig].est_attraction << ",dev:," << g_zone_vector[orig].est_attraction_dev << endl;
             }
 
             total_gap += abs(g_zone_vector[orig].est_attraction_dev);
@@ -3678,7 +3329,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
             if (g_debug_level == 2)
             {
                 dtalog() << "zone " << g_zone_vector[orig].zone_id << "P: obs:" << g_zone_vector[orig].obs_production
-                       << ",est:," << g_zone_vector[orig].est_production << ",dev:," << g_zone_vector[orig].est_production_dev << endl;
+                         << ",est:," << g_zone_vector[orig].est_production << ",dev:," << g_zone_vector[orig].est_production_dev << endl;
             }
 
             total_gap += abs(g_zone_vector[orig].est_production_dev);
@@ -3687,9 +3338,17 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
     }
 
     dtalog() << "ODME #" << iteration_no<< " total abs gap= " << total_gap 
+             << ",subg_link: " << sub_total_gap_link_count*100 
            << ",subg_link: " << sub_total_gap_link_count*100 
+             << ",subg_link: " << sub_total_gap_link_count*100 
+           << ",subg_link: " << sub_total_gap_link_count*100 
+             << ",subg_link: " << sub_total_gap_link_count*100 
+             << ",subg_P: " << sub_total_gap_P_count*100 
            << ",subg_P: " << sub_total_gap_P_count*100 
-           << ",subg_A: " << sub_total_gap_A_count * 100 << endl;
+             << ",subg_P: " << sub_total_gap_P_count*100 
+           << ",subg_P: " << sub_total_gap_P_count*100 
+             << ",subg_P: " << sub_total_gap_P_count*100 
+             << ",subg_A: " << sub_total_gap_A_count * 100 << endl;
 }
 
 void g_update_gradient_cost_and_assigned_flow_in_column_pool(Assignment& assignment, int inner_iteration_number)
@@ -3836,7 +3495,6 @@ void g_update_gradient_cost_and_assigned_flow_in_column_pool(Assignment& assignm
     }
 }
 
-
 void g_column_pool_optimization(Assignment& assignment, int column_updating_iterations)
 {
     // column_updating_iterations is internal numbers of column updating
@@ -3850,14 +3508,12 @@ void g_column_pool_optimization(Assignment& assignment, int column_updating_iter
             for (int i = 0; i < g_link_vector.size(); ++i) 
             {
                 dtalog() << "link: " << g_node_vector[g_link_vector[i].from_node_seq_no].node_id << "-->"
-                       << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
-                       << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
+                         << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
+                         << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
             }
         }
     }
 }
-
-char str_buffer[STRING_LENGTH_PER_LINE];
 
 void g_output_simulation_result(Assignment& assignment)
 {
@@ -3896,15 +3552,15 @@ void g_output_simulation_result(Assignment& assignment)
                 {
                     float speed = g_link_vector[i].length / (max(0.001f, g_link_vector[i].VDF_period[tau].avg_travel_time) / 60.0);
                     fprintf(g_pFileLinkMOE, "%s,%d,%d,%s,%.3f,%.3f,%.3f,%.3f,0,0,\"%s\",",
-                        g_link_vector[i].link_id.c_str(),
-                        g_node_vector[g_link_vector[i].from_node_seq_no].node_id,
-                        g_node_vector[g_link_vector[i].to_node_seq_no].node_id,
-                        assignment.g_DemandPeriodVector[tau].time_period.c_str(),
-                        g_link_vector[i].flow_volume_per_period[tau],
-                        g_link_vector[i].VDF_period[tau].avg_travel_time,
-                        speed,  /* 60.0 is used to convert min to hour */
-                        g_link_vector[i].VDF_period[tau].VOC,
-                        g_link_vector[i].geometry.c_str());
+                            g_link_vector[i].link_id.c_str(),
+                            g_node_vector[g_link_vector[i].from_node_seq_no].node_id,
+                            g_node_vector[g_link_vector[i].to_node_seq_no].node_id,
+                            assignment.g_DemandPeriodVector[tau].time_period.c_str(),
+                            g_link_vector[i].flow_volume_per_period[tau],
+                            g_link_vector[i].VDF_period[tau].avg_travel_time,
+                            speed,  /* 60.0 is used to convert min to hour */
+                            g_link_vector[i].VDF_period[tau].VOC,
+                            g_link_vector[i].geometry.c_str());
 
                     if (assignment.assignment_mode == 3)  //ODME
                     {
@@ -4111,7 +3767,7 @@ void g_output_simulation_result(Assignment& assignment)
 
         for (int orig = 0; orig < zone_size; ++orig)
         { 
-            if(g_zone_vector[orig].zone_id %100 ==0)
+            if(g_zone_vector[orig].zone_id % 100 == 0)
                 dtalog() << "o zone id =  " << g_zone_vector[orig].zone_id << endl;
 
             for (int at = 0; at < agent_type_size; ++at)
@@ -4296,7 +3952,6 @@ void g_output_simulation_result(Assignment& assignment)
                 }
             }
         }
-
         fclose(g_pFileODMOE);
     }
 }
@@ -4579,7 +4234,6 @@ void g_fetch_link_volume_for_all_processors()
 //major function: update the cost for each node at each SP tree, using a stack from the origin structure 
 void NetworkForSP::backtrace_shortest_path_tree(Assignment& assignment, int iteration_number_outterloop, int o_node_index)
 {
-
     int origin_node = m_origin_node_vector[o_node_index]; // assigned no
     int m_origin_zone_seq_no = m_origin_zone_seq_no_vector[o_node_index]; // assigned no
 
@@ -4816,13 +4470,13 @@ double network_assignment(int assignment_mode, int iteration_number, int column_
             g_reset_and_update_link_volume_based_on_columns(g_link_vector.size(), iteration_number, true);
         }
 
-        if (g_debug_level  >= 3)
+        if (g_debug_level >= 3)
         {
             dtalog() << "Results:" << endl;
             for (int i = 0; i < g_link_vector.size(); ++i) {
                 dtalog() << "link: " << g_node_vector[g_link_vector[i].from_node_seq_no].node_id << "-->"
-                       << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
-                       << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
+                         << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
+                         << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
             }
         }
 
@@ -4834,7 +4488,7 @@ double network_assignment(int assignment_mode, int iteration_number, int column_
         //step 3.2 computng block for continuous variables;
 
         clock_t start_t_lc = clock();
-        clock_t  start_t_cp = clock();
+        clock_t start_t_cp = clock();
 
         cumulative_lc = 0;
         cumulative_cp = 0;
@@ -5148,7 +4802,7 @@ void Assignment::STTrafficSimulation()
                                 int simulation_time_intervalNo = (int)(pAgent->departure_time_in_min * 60/ number_of_seconds_per_interval);
                                 g_AgentTDListMap[simulation_time_intervalNo].m_AgentIDVector.push_back(pAgent->agent_id);
 
-                                for (int nl = 0; nl < it->second.m_link_size; nl++)  // arc a
+                                for (int nl = 0; nl < it->second.m_link_size; ++nl)  // arc a
                                 {
                                     int link_seq_no = it->second.path_link_vector[nl];
                                     pAgent->path_link_seq_no_vector.push_back(link_seq_no);
@@ -5259,10 +4913,10 @@ void Assignment::STTrafficSimulation()
                         p_agent->m_bCompleteTrip = true;
                         m_LinkCumulativeDeparture[link][t] += 1;
 
-#pragma omp critical
-{
-                        TotalCumulative_Departure_Count += 1;
-}
+                        #pragma omp critical
+                        {
+                            TotalCumulative_Departure_Count += 1;
+                        }
 
                     }
                     else
@@ -5473,7 +5127,7 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
                             it_begin = p_column->path_node_sequence_map.begin();
                             it_end = p_column->path_node_sequence_map.end();
                             int i = 0;
-                            for (it = it_begin; it != it_end; ++it, i++) // for each k 
+                            for (it = it_begin; it != it_end; ++it, ++i) // for each k 
                             {
                                 path_gradient_cost = 0;
                                 path_distance = 0;
@@ -5500,7 +5154,7 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
                                     if (g_zone_vector[orig].obs_attraction_upper_bound_flag == 0)
                                         path_gradient_cost += g_zone_vector[dest].est_attraction_dev;
 
-                                    if (g_zone_vector[orig].obs_attraction_upper_bound_flag == 1 && g_zone_vector[dest].est_attraction_dev >0)
+                                    if (g_zone_vector[orig].obs_attraction_upper_bound_flag == 1 && g_zone_vector[dest].est_attraction_dev > 0)
                                         path_gradient_cost += g_zone_vector[dest].est_attraction_dev;
                                 }
 
@@ -5509,7 +5163,7 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
                                 {
                                     // step 3.3 link flow gradient 
                                     link_seq_no = it->second.path_link_vector[nl];
-                                    if(g_link_vector[link_seq_no].obs_count>=1)
+                                    if(g_link_vector[link_seq_no].obs_count >= 1)
                                     { 
                                         if (g_link_vector[link_seq_no].upper_bound_flag == 0)
                                         {
@@ -5547,13 +5201,21 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
                                 if (g_log_odme == 1)
                                 { 
                                     dtalog() << "OD " << orig << "-> " << dest << " path id:" << i << ", prev_vol"
+                                             << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
                                            << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
-                                           << " link," << g_link_vector[link_seq_no].est_count_dev
-                                           << " P," << g_zone_vector[orig].est_production_dev
-                                           << " A," << g_zone_vector[orig].est_attraction_dev
+                                             << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
+                                           << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
+                                             << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
+                                             << " link," << g_link_vector[link_seq_no].est_count_dev
+                                             << " P," << g_zone_vector[orig].est_production_dev
+                                             << " A," << g_zone_vector[orig].est_attraction_dev
+                                             << "proposed change = " << step_size * it->second.path_gradient_cost 
                                            << "proposed change = " << step_size * it->second.path_gradient_cost 
-                                           << "actual change = " << change
-                                           <<"new vol = " << it->second.path_volume <<endl;
+                                             << "proposed change = " << step_size * it->second.path_gradient_cost 
+                                           << "proposed change = " << step_size * it->second.path_gradient_cost 
+                                             << "proposed change = " << step_size * it->second.path_gradient_cost 
+                                             << "actual change = " << change
+                                             <<"new vol = " << it->second.path_volume <<endl;
                                 }
                             }
                         }
@@ -5562,7 +5224,6 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
             }
         }
     }
-
     //if (assignment.g_pFileDebugLog != NULL)
     //	fprintf(assignment.g_pFileDebugLog, "CU: iteration %d: total_gap=, %f,total_relative_gap=, %f,\n", s, total_gap, total_gap / max(0.0001, total_gap_count));
 }

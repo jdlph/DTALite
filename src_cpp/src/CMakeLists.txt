@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("DTALite")
 
-option(BUILD_EXE "BUILD Executable or not" OFF)
+option(BUILD_EXE "BUILD Executable or not" ON)
 
 configure_file(config.h.in config.h)
 
@@ -36,7 +36,7 @@ else()
     add_library(DTALite SHARED utils.cpp main_api.cpp)
 endif()
 
-# using OpenMP, the second command is only needed for macOS
+# using OpenMP
 find_package(OpenMP REQUIRED)
 target_link_libraries(DTALite PRIVATE OpenMP::OpenMP_CXX)
 

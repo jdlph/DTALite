@@ -7,28 +7,27 @@
  * More about "How to use GNU licenses for your own software"
  * http://www.gnu.org/licenses/gpl-howto.html 
  */
+
 #ifdef _WIN32
 #include "pch.h"
 #endif
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "teestream.h"
 #include "utils.h"
 #include "config.h"
 
 int main()
 {
-    std::ofstream file("log.csv");
-    teestream log_out(std::cout, file);
     // reset all the log files to defult 0: not output; if want to output these logs set to 1
-    log_out << "STALite Log" << std::fixed << std::setw(12) << '\n';
-    log_out.debug_level = 0;
-    log_out.log_sig = 0;
-    log_out.log_odme = 0;
-    log_out.log_path = 0;
-    log_out.log_dta = 0;
-    log_out.log_ue = 0;
+    dtalog() << "STALite Log" << std::fixed << std::setw(12) << '\n';
+    dtalog().debug_level = 0;
+    dtalog().log_sig = 0;
+    dtalog().log_odme = 0;
+    dtalog().log_path = 0;
+    dtalog().log_dta = 0;
+    dtalog().log_ue = 0;
 
     int iteration_number = 20;
     int column_updating_iterations = 40;
@@ -66,7 +65,7 @@ int main()
                     assignment_mode = 3;
                 else
                 {
-                    log_out << "assignment_mode " << assignment_mode_str.c_str() << " in settings.csv is invalid." << std::endl;
+                    dtalog() << "assignment_mode " << assignment_mode_str.c_str() << " in settings.csv is invalid." << std::endl;
                     g_ProgramStop();
                 }
 
@@ -82,10 +81,10 @@ int main()
 
             if (parser_settings.SectionName == "[log]")
             {
-                parser_settings.GetValueByFieldName("sig", log_out.log_sig,false);
-                parser_settings.GetValueByFieldName("odme", log_out.log_odme, false);
-                parser_settings.GetValueByFieldName("path", log_out.log_path, false);
-                parser_settings.GetValueByFieldName("ue", log_out.log_ue, false);
+                parser_settings.GetValueByFieldName("sig", dtalog().log_sig, false);
+                parser_settings.GetValueByFieldName("odme", dtalog().log_odme, false);
+                parser_settings.GetValueByFieldName("path", dtalog().log_path, false);
+                parser_settings.GetValueByFieldName("ue", dtalog().log_ue, false);
                 
                 // just one record
                 break; 

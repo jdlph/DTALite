@@ -1,3 +1,13 @@
+/* Portions Copyright 2019 Xuesong Zhou
+ *
+ * If you help write or modify the code, please also list your names here.
+ * The reason of having Copyright info here is to ensure all the modified version, as a whole, under the GPL
+ * and further prevent a violation of the GPL.
+ *
+ * More about "How to use GNU licenses for your own software"
+ * http://www.gnu.org/licenses/gpl-howto.html 
+ */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -18,7 +28,7 @@ using std::ostringstream;
 teestream& dtalog()
 {
     static ofstream logfile{"log.txt"};
-    static teestream ts(std::cout, logfile);
+    static teestream ts{std::cout, logfile};
 
     return ts;
 }
@@ -266,3 +276,285 @@ int g_ParserIntSequence(std::string str, vector<int>& vect)
 
     return vect.size();
 }
+
+// definitions of CCSVParser member functions
+void CCSVParser::ConvertLineStringValueToIntegers()
+{
+    LineIntegerVector.clear();
+    for (unsigned i = 0; i < LineFieldsValue.size(); ++i)
+    {
+        string si = LineFieldsValue[i];
+        int value = atoi(si.c_str());
+
+        if (value >= 1)
+            LineIntegerVector.push_back(value);
+    }
+}
+
+bool CCSVParser::OpenCSVFile(string fileName, bool b_required)
+{
+    mFileName = fileName;
+    inFile.open(fileName.c_str());
+
+    if (inFile.is_open())
+    {
+        if (IsFirstLineHeader)
+        {
+            string s;
+            std::getline(inFile, s);
+            vector<string> FieldNames = ParseLine(s);
+
+            for (size_t i = 0;i < FieldNames.size();i++)
+            {
+                string tmp_str = FieldNames.at(i);
+                size_t start = tmp_str.find_first_not_of(" ");
+
+                string name;
+                if (start == string::npos)
+                {
+                    name = "";
+                }
+                else
+                {
+                    name = tmp_str.substr(start);
+                    //TRACE("%s,", name.c_str());
+                }
+                FieldsIndices[name] = (int)i;
+            }
+        }
+        return true;
+    }
+    else
+    {
+        if (b_required)
+        {
+            dtalog() << "File " << fileName << " does not exist. Please check." << std::endl;
+            //g_ProgramStop();
+        }
+        return false;
+    }
+}
+
+bool CCSVParser::ReadRecord()
+{
+    LineFieldsValue.clear();
+
+    if (inFile.is_open())
+    {
+        string s;
+        std::getline(inFile, s);
+        if (s.length() > 0)
+        {
+            LineFieldsValue = ParseLine(s);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool CCSVParser::ReadSectionHeader(string s)
+{
+    //skip // data 
+    Headers.clear();
+    FieldsIndices.clear();
+
+    if (s.length() == 0)
+        return true;
+
+    vector<string> FieldNames = ParseLine(s);
+
+    for (size_t i = 0; i < FieldNames.size(); i++)
+    {
+        string tmp_str = FieldNames.at(i);
+        size_t start = tmp_str.find_first_not_of(" ");
+
+        string name;
+        if (start == string::npos)
+        {
+            name = "";
+        }
+        else
+        {
+            name = tmp_str.substr(start);
+        }
+        Headers.push_back(name);
+        FieldsIndices[name] = (int)i;
+    }
+    return true;
+}
+
+bool CCSVParser::ReadRecord_Section()
+{
+    LineFieldsValue.clear();
+
+    if (inFile.is_open())
+    {
+        string s;
+        std::getline(inFile, s);
+        if (s.length() > 0)
+        {
+            if(s.find("[") != string::npos)  // synchro single csv file
+            {
+                LineFieldsValue = ParseLine(s);
+
+                if (LineFieldsValue.size() >= 1)
+                {
+                    SectionName = LineFieldsValue[0];
+                }
+
+                //re-read section header
+                ReadSectionHeader(s);
+                std::getline(inFile, s);
+            }
+            LineFieldsValue = ParseLine(s);
+            return true;
+        }
+        else
+        {
+            if (m_bLastSectionRead)  // reach the last section
+                return false;
+            else
+            {
+                if (inFile.eof())
+                    return false;
+                else
+                    return true;
+            }
+        }
+    }
+    else
+    {
+        return false;
+    }
+}
+
+vector<string> CCSVParser::ParseLine(string line)
+{
+    vector<string> SeperatedStrings;
+    string subStr;
+
+    if (line.length() == 0)
+        return SeperatedStrings;
+
+    std::istringstream ss(line);
+
+    if (line.find_first_of('"') == string::npos)
+    {
+        while (std::getline(ss, subStr, Delimiter))
+        {
+            SeperatedStrings.push_back(subStr);
+        }
+
+        if (line.at(line.length() - 1) == ',')
+        {
+            SeperatedStrings.push_back("");
+        }
+    }
+    else
+    {
+        while (line.length() > 0)
+        {
+            size_t n1 = line.find_first_of(',');
+            size_t n2 = line.find_first_of('"');
+
+            if (n1 == string::npos && n2 == string::npos) //last field without double quotes
+            {
+                subStr = line;
+                SeperatedStrings.push_back(subStr);
+                break;
+            }
+
+            if (n1 == string::npos && n2 != string::npos) //last field with double quotes
+            {
+                size_t n3 = line.find_first_of('"', n2 + 1); // second double quote
+
+                //extract content from double quotes
+                subStr = line.substr(n2 + 1, n3 - n2 - 1);
+                SeperatedStrings.push_back(subStr);
+
+                break;
+            }
+
+            if (n1 != string::npos && (n1 < n2 || n2 == string::npos))
+            {
+                subStr = line.substr(0, n1);
+                SeperatedStrings.push_back(subStr);
+                if (n1 < line.length() - 1)
+                {
+                    line = line.substr(n1 + 1);
+                }
+                else // comma is the last char in the line string, push an empty string to the back of vector
+                {
+                    SeperatedStrings.push_back("");
+                    break;
+                }
+            }
+
+            if (n1 != string::npos && n2 != string::npos && n2 < n1)
+            {
+                size_t n3 = line.find_first_of('"', n2 + 1); // second double quote
+                subStr = line.substr(n2 + 1, n3 - n2 - 1);
+                SeperatedStrings.push_back(subStr);
+                size_t idx = line.find_first_of(',', n3 + 1);
+
+                if (idx != string::npos)
+                {
+                    line = line.substr(idx + 1);
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+    return SeperatedStrings;
+}
+
+bool CCSVParser::GetValueByFieldName(string field_name, string& value, bool required_field)
+{
+    if (FieldsIndices.find(field_name) == FieldsIndices.end())
+    {
+        if (required_field)
+        {
+            dtalog() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
+            g_ProgramStop();
+        }
+        return false;
+    }
+    else
+    {
+        if (LineFieldsValue.size() == 0)
+        {
+            return false;
+        }
+
+        unsigned int index = FieldsIndices[field_name];
+        if (index >= LineFieldsValue.size())
+        {
+            return false;
+        }
+        string str_value = LineFieldsValue[index];
+
+        if (str_value.length() <= 0)
+        {
+            return false;
+        }
+
+        value = str_value;
+        return true;
+    }
+}
+
+// Peiheng, 03/22/21, to avoid implicit instantiations in flash_dta.cpp and main_api.cpp
+// the other (general) way to move this definition to utils.h
+// template bool CCSVParser::GetValueByFieldName(string field_name, int& value, bool required_field, bool NonnegativeFlag);
+// template bool CCSVParser::GetValueByFieldName(string field_name, float& value, bool required_field, bool NonnegativeFlag);
+// template bool CCSVParser::GetValueByFieldName(string field_name, double& value, bool required_field, bool NonnegativeFlag);

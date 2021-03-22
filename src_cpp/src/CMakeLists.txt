@@ -2,13 +2,13 @@ cmake_minimum_required (VERSION 3.8)
 
 project ("DTALite")
 
-option(BUILD_EXE "BUILD Executable or not" ON)
+option(BUILD_EXE "BUILD Executable or not" OFF)
 
 configure_file(config.h.in config.h)
 
 if(BUILD_EXE)
     message("Building executable on ${CMAKE_SYSTEM_NAME}")
-elseif()
+else()
     message("Building shared library on ${CMAKE_SYSTEM_NAME}")
 endif()
 
@@ -20,7 +20,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # enable OpenMP
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "-Xpreprocessor -fopenmp -lomp fpic")
-elseif()
+else()
     set(CMAKE_CXX_FLAGS "-fopenmp -fpic")
 endif()
 
@@ -32,7 +32,7 @@ set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/bin)
 
 if(BUILD_EXE)
     add_executable(DTALite utils.cpp flash_dta.cpp main_api.cpp)
-elseif()
+else()
     add_library(DTALite SHARED utils.cpp main_api.cpp)
 endif()
 

@@ -1,4 +1,4 @@
-/* Portions Copyright 2019 Xuesong Zhou
+/* Portions Copyright 2021 Xuesong Zhou
  *
  * If you help write or modify the code, please also list your names here.
  * The reason of having Copyright info here is to ensure all the modified version, as a whole, under the GPL

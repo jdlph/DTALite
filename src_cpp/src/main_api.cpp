@@ -80,12 +80,6 @@ constexpr auto STRING_LENGTH_PER_LINE = 50000;
 
 char str_buffer[STRING_LENGTH_PER_LINE];
 
-// Peiheng, 03/22/21, we shall use these values in dtalog()
-// consider replacing them later
-int g_debug_level = 0;
-int g_log_odme = 0;
-int g_log_path = 0;
-
 // FILE* g_pFileOutputLog = nullptr;
 
 template <typename T>
@@ -1358,7 +1352,7 @@ public:
         }
 
         // after dynamic arrays are created for forward star
-        if (g_debug_level == 2)
+        if (dtalog().debug_level == 2)
         {
             dtalog() << "add outgoing link data into dynamic array" << endl;
 
@@ -1377,7 +1371,7 @@ public:
                 }
                 else
                 {
-                    if (g_debug_level == 3)
+                    if (dtalog().debug_level == 3)
                     {
                         dtalog() << "node id= " << g_node_vector[i].node_id << " with "
                                  << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
@@ -1473,7 +1467,7 @@ public:
         if (p_assignment->g_number_of_nodes >= 1000 && origin_zone%97 == 0)
             dtalog() << "label correcting for zone " << origin_zone <<  " in processor " << processor_id <<  endl;
 
-        if (g_debug_level  >= 2)
+        if (dtalog().debug_level  >= 2)
             dtalog() << "SP iteration k =  " << iteration_k << ": origin node: " << g_node_vector[origin_node].node_id << endl;
 
         int number_of_nodes = p_assignment->g_number_of_nodes;
@@ -1528,7 +1522,7 @@ public:
 
             m_node_status_array[from_node] = 2;
 
-            if (g_log_path >= 2)
+            if (dtalog().log_path >= 2)
             { 
                 dtalog() << "SP:scan SE node: " << g_node_vector[from_node].node_id << " with " 
                          << NodeForwardStarArray[from_node].OutgoingLinkSize  << " outgoing link(s). "<< endl;
@@ -1543,7 +1537,7 @@ public:
                 to_node = NodeForwardStarArray[from_node].OutgoingNodeNoArray[i];
                 link_sqe_no = NodeForwardStarArray[from_node].OutgoingLinkNoArray[i];
 
-                if (g_log_path >= 2)
+                if (dtalog().log_path >= 2)
                     dtalog() << "SP:  checking outgoing node " << g_node_vector[to_node].node_id << endl;
 
                 // if(map (pred_link_seq_no, link_sqe_no) is prohibitted )
@@ -1585,7 +1579,7 @@ public:
                 // Mark				new_distance = m_label_distance_array[from_node] + pLink->length;
                 new_to_node_cost = m_node_label_cost[from_node] + m_link_genalized_cost_array[link_sqe_no];
 
-                if (g_log_path)
+                if (dtalog().log_path)
                 {
                     dtalog() << "SP:  checking from node " << g_node_vector[from_node].node_id  
                              << "  to node" << g_node_vector[to_node].node_id << " cost = " << new_to_node_cost << endl;
@@ -1593,7 +1587,7 @@ public:
 
                 if (new_to_node_cost < m_node_label_cost[to_node]) // we only compare cost at the downstream node ToID at the new arrival time t
                 {
-                    if (g_log_path)
+                    if (dtalog().log_path)
                     {
                         dtalog() << "SP:  updating node: " << g_node_vector[to_node].node_id << " current cost:" << m_node_label_cost[to_node] 
                                  << " new cost " << new_to_node_cost << endl;
@@ -1608,7 +1602,7 @@ public:
                     // pointer to previous physical NODE INDEX from the current label at current node and time
                     m_link_predecessor[to_node] = link_sqe_no; 
 
-                    if (g_log_path)
+                    if (dtalog().log_path)
                     {
                         dtalog() << "SP: add node " << g_node_vector[to_node].node_id << " new cost:" << new_to_node_cost 
                                  << " into SE List " << g_node_vector[to_node].node_id << endl;
@@ -1659,7 +1653,7 @@ public:
             }
         }
 
-        if (g_log_path)
+        if (dtalog().log_path)
         { 
             dtalog() << "SPtree at iteration k = " << iteration_k <<  " origin node: " 
                      << g_node_vector[origin_node].node_id  << endl;
@@ -2702,7 +2696,7 @@ void g_ReadInputData(Assignment& assignment)
 
     dtalog() << "number of links =" << assignment.g_number_of_links << endl;
 
-    if (g_debug_level == 2)
+    if (dtalog().debug_level == 2)
     {
         for (int i = 0; i < g_node_vector.size(); ++i)
         {
@@ -2719,7 +2713,7 @@ void g_ReadInputData(Assignment& assignment)
             }
             else
             {
-                if (g_debug_level == 3)
+                if (dtalog().debug_level == 3)
                 {
                     dtalog() << "node id= " << g_node_vector[i].node_id << " with " << g_node_vector[i].m_outgoing_link_seq_no_vector.size() << " outgoing links." << endl;
                     for (int j = 0; j < g_node_vector[i].m_outgoing_link_seq_no_vector.size(); ++j)
@@ -3298,7 +3292,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
         {
             int tau = 0;
             g_link_vector[i].est_count_dev = g_link_vector[i].flow_volume_per_period[tau] - g_link_vector[i].obs_count;
-            if (g_debug_level == 2)
+            if (dtalog().debug_level == 2)
             { 
                 dtalog() << "link " << g_node_vector [g_link_vector[i].from_node_seq_no].node_id
                          << "->" << g_node_vector[g_link_vector[i].to_node_seq_no].node_id
@@ -3316,7 +3310,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
         {
             g_zone_vector[orig].est_attraction_dev = g_zone_vector[orig].est_attraction - g_zone_vector[orig].obs_attraction;
 
-            if (g_debug_level == 2)
+            if (dtalog().debug_level == 2)
             {
                 dtalog() << "zone " << g_zone_vector[orig].zone_id << "A: obs:" << g_zone_vector[orig].obs_attraction
                          << ",est:," << g_zone_vector[orig].est_attraction << ",dev:," << g_zone_vector[orig].est_attraction_dev << endl;
@@ -3330,7 +3324,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
         {
             g_zone_vector[orig].est_production_dev = g_zone_vector[orig].est_production - g_zone_vector[orig].obs_production;
 
-            if (g_debug_level == 2)
+            if (dtalog().debug_level == 2)
             {
                 dtalog() << "zone " << g_zone_vector[orig].zone_id << "P: obs:" << g_zone_vector[orig].obs_production
                          << ",est:," << g_zone_vector[orig].est_production << ",dev:," << g_zone_vector[orig].est_production_dev << endl;
@@ -3343,14 +3337,14 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
 
     dtalog() << "ODME #" << iteration_no<< " total abs gap= " << total_gap 
              << ",subg_link: " << sub_total_gap_link_count*100 
-           << ",subg_link: " << sub_total_gap_link_count*100 
              << ",subg_link: " << sub_total_gap_link_count*100 
-           << ",subg_link: " << sub_total_gap_link_count*100 
+             << ",subg_link: " << sub_total_gap_link_count*100 
+             << ",subg_link: " << sub_total_gap_link_count*100 
              << ",subg_link: " << sub_total_gap_link_count*100 
              << ",subg_P: " << sub_total_gap_P_count*100 
-           << ",subg_P: " << sub_total_gap_P_count*100 
              << ",subg_P: " << sub_total_gap_P_count*100 
-           << ",subg_P: " << sub_total_gap_P_count*100 
+             << ",subg_P: " << sub_total_gap_P_count*100 
+             << ",subg_P: " << sub_total_gap_P_count*100 
              << ",subg_P: " << sub_total_gap_P_count*100 
              << ",subg_A: " << sub_total_gap_A_count * 100 << endl;
 }
@@ -3507,7 +3501,7 @@ void g_column_pool_optimization(Assignment& assignment, int column_updating_iter
         dtalog() << "Current iteration number: " << n << endl;
         g_update_gradient_cost_and_assigned_flow_in_column_pool(assignment, n);
         
-        if(g_debug_level >=3)
+        if(dtalog().debug_level >=3)
         { 
             for (int i = 0; i < g_link_vector.size(); ++i) 
             {
@@ -3878,7 +3872,7 @@ void g_output_simulation_result(Assignment& assignment)
                                     }
 
                                     buffer_len += sprintf(str_buffer + buffer_len, ")\"\n");
-                                    fprintf(g_pFileODMOE, "%s", str_buffer, buffer_len);
+                                    fprintf(g_pFileODMOE, "%s", str_buffer);
                                     count++;
                                 }
                                 else
@@ -3946,7 +3940,7 @@ void g_output_simulation_result(Assignment& assignment)
                                             g_ProgramStop();
                                         }
 
-                                        fprintf(g_pFileODMOE, "%s", str_buffer, buffer_len);
+                                        fprintf(g_pFileODMOE, "%s", str_buffer);
                                         count++;
                                     }
                                 }
@@ -4474,7 +4468,7 @@ double network_assignment(int assignment_mode, int iteration_number, int column_
             g_reset_and_update_link_volume_based_on_columns(g_link_vector.size(), iteration_number, true);
         }
 
-        if (g_debug_level >= 3)
+        if (dtalog().debug_level >= 3)
         {
             dtalog() << "Results:" << endl;
             for (int i = 0; i < g_link_vector.size(); ++i) {
@@ -5202,7 +5196,7 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
 
                                 it->second.path_volume = max(1.0f, it->second.path_volume - change);
 
-                                if (g_log_odme == 1)
+                                if (dtalog().log_odme == 1)
                                 { 
                                     dtalog() << "OD " << orig << "-> " << dest << " path id:" << i << ", prev_vol"
                                              << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 

@@ -1359,9 +1359,9 @@ public:
             for (int i = 0; i < g_node_vector.size(); ++i)
             {
                 if (g_node_vector[i].zone_org_id > 0) // for each physical node
-                { // we need to make sure we only create two way connectors between nodes and zones 
+                { // we need to make sure we only create two way connectors between nodes and zones
                     dtalog.output() << "node id= " << g_node_vector[i].node_id << " with zone id " << g_node_vector[i].zone_org_id << "and "
-                             << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
+                                    << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
 
                     for (int j = 0; j < NodeForwardStarArray[i].OutgoingLinkSize; j++)
                     {
@@ -1374,7 +1374,7 @@ public:
                     if (dtalog.debug_level() == 3)
                     {
                         dtalog.output() << "node id= " << g_node_vector[i].node_id << " with "
-                                 << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
+                                        << NodeForwardStarArray[i].OutgoingLinkSize << " outgoing links." << endl;
 
                         for (int j = 0; j < NodeForwardStarArray[i].OutgoingLinkSize; ++j)
                         {
@@ -1523,9 +1523,9 @@ public:
             m_node_status_array[from_node] = 2;
 
             if (dtalog.log_path() >= 2)
-            { 
-                dtalog.output() << "SP:scan SE node: " << g_node_vector[from_node].node_id << " with " 
-                         << NodeForwardStarArray[from_node].OutgoingLinkSize  << " outgoing link(s). "<< endl;
+            {
+                dtalog.output() << "SP:scan SE node: " << g_node_vector[from_node].node_id << " with "
+                                << NodeForwardStarArray[from_node].OutgoingLinkSize  << " outgoing link(s). "<< endl;
             }
             //scan all outbound nodes of the current node
 
@@ -1581,16 +1581,16 @@ public:
 
                 if (dtalog.log_path())
                 {
-                    dtalog.output() << "SP:  checking from node " << g_node_vector[from_node].node_id  
-                             << "  to node" << g_node_vector[to_node].node_id << " cost = " << new_to_node_cost << endl;
+                    dtalog.output() << "SP:  checking from node " << g_node_vector[from_node].node_id
+                                    << "  to node" << g_node_vector[to_node].node_id << " cost = " << new_to_node_cost << endl;
                 }
 
                 if (new_to_node_cost < m_node_label_cost[to_node]) // we only compare cost at the downstream node ToID at the new arrival time t
                 {
                     if (dtalog.log_path())
                     {
-                        dtalog.output() << "SP:  updating node: " << g_node_vector[to_node].node_id << " current cost:" << m_node_label_cost[to_node] 
-                                 << " new cost " << new_to_node_cost << endl;
+                        dtalog.output() << "SP:  updating node: " << g_node_vector[to_node].node_id << " current cost:" << m_node_label_cost[to_node]
+                                        << " new cost " << new_to_node_cost << endl;
                     }
 
                     // update cost label and node/time predecessor
@@ -1604,8 +1604,8 @@ public:
 
                     if (dtalog.log_path())
                     {
-                        dtalog.output() << "SP: add node " << g_node_vector[to_node].node_id << " new cost:" << new_to_node_cost 
-                                 << " into SE List " << g_node_vector[to_node].node_id << endl;
+                        dtalog.output() << "SP: add node " << g_node_vector[to_node].node_id << " new cost:" << new_to_node_cost
+                                        << " into SE List " << g_node_vector[to_node].node_id << endl;
                     }
 
                     // deque updating rule for m_node_status_array
@@ -1654,9 +1654,9 @@ public:
         }
 
         if (dtalog.log_path())
-        { 
-            dtalog.output() << "SPtree at iteration k = " << iteration_k <<  " origin node: " 
-                     << g_node_vector[origin_node].node_id  << endl;
+        {
+            dtalog.output() << "SPtree at iteration k = " << iteration_k <<  " origin node: "
+                            << g_node_vector[origin_node].node_id  << endl;
 
             //Initialization for all non-origin nodes
             for (int i = 0; i < p_assignment->g_number_of_nodes; ++i)
@@ -1668,9 +1668,9 @@ public:
                     node_pred_id = g_node_vector[node_pred_no].node_id;
 
                 if(m_node_label_cost[i] < 9999)
-                { 
+                {
                     dtalog.output() << "SP node: " << g_node_vector[i].node_id << " label cost " << m_node_label_cost[i] << "time "
-                             << m_label_time_array[i] << "node_pred_id " << node_pred_id << endl;
+                                    << m_label_time_array[i] << "node_pred_id " << node_pred_id << endl;
                 }
             }
         }
@@ -2124,7 +2124,7 @@ void g_ReadInputData(Assignment& assignment)
     CCSVParser parser_demand_period;
     dtalog.output() << "Step 1: Reading input data" << endl;
     dtalog.output() << "Step 1.1: Reading section [demand_period] in setting.csv..." << endl;
-    
+
     parser_demand_period.IsFirstLineHeader = false;
     if (parser_demand_period.OpenCSVFile("settings.csv", false))
     {
@@ -2146,7 +2146,7 @@ void g_ReadInputData(Assignment& assignment)
                 vector<float> global_minute_vector;
 
                 if (!parser_demand_period.GetValueByFieldName("time_period", demand_period.time_period))
-                { 
+                {
                     dtalog.output() << "Error: Field time_period in file demand_period cannot be read." << endl;
                     g_ProgramStop();
                 }
@@ -2193,7 +2193,7 @@ void g_ReadInputData(Assignment& assignment)
     //step 1:read demand type file
 
     dtalog.output() << "Step 1.2: Reading section [link_type] in setting.csv..." << endl;
-    
+
     CCSVParser parser_link_type;
     parser_link_type.IsFirstLineHeader = false;
     if (parser_link_type.OpenCSVFile("settings.csv", false))
@@ -2257,7 +2257,7 @@ void g_ReadInputData(Assignment& assignment)
 
                 if (element.agent_type_blocklist.size() >= 1)
                     dtalog.output() << "important: agent type of " << element.agent_type_blocklist << " are prohibited " << " on link type " << element.link_type << endl;
-            
+
                 assignment.g_LinkTypeMap[element.link_type] = element;
                 line_no++;
             }
@@ -2476,7 +2476,7 @@ void g_ReadInputData(Assignment& assignment)
     }
 
     dtalog.output() << "number of zones = " << g_zone_vector.size() << endl;
-    // step 4: read link file 
+    // step 4: read link file
 
     CCSVParser parser_link;
 
@@ -2701,10 +2701,10 @@ void g_ReadInputData(Assignment& assignment)
         for (int i = 0; i < g_node_vector.size(); ++i)
         {
             if (g_node_vector[i].zone_org_id > 0) // for each physical node
-            { 
-                // we need to make sure we only create two way connectors between nodes and zones 
+            {
+                // we need to make sure we only create two way connectors between nodes and zones
                 dtalog.output() << "node id= " << g_node_vector[i].node_id << " with zone id " << g_node_vector[i].zone_org_id << "and "
-                         << g_node_vector[i].m_outgoing_link_seq_no_vector.size() << " outgoing links." << endl;
+                                << g_node_vector[i].m_outgoing_link_seq_no_vector.size() << " outgoing links." << endl;
                 for (int j = 0; j < g_node_vector[i].m_outgoing_link_seq_no_vector.size(); ++j)
                 {
                     int link_seq_no = g_node_vector[i].m_outgoing_link_seq_no_vector[j];
@@ -2909,7 +2909,7 @@ void g_reload_service_arc_data(Assignment& assignment)
 
     dtalog.output() << endl;
     dtalog.output() << "Step 1.8: Reading file section [demand_file_list] in setting.csv..." << endl;
-    
+
     CCSVParser parser;
     parser.IsFirstLineHeader = false;
 
@@ -3290,11 +3290,11 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
             int tau = 0;
             g_link_vector[i].est_count_dev = g_link_vector[i].flow_volume_per_period[tau] - g_link_vector[i].obs_count;
             if (dtalog.debug_level() == 2)
-            { 
+            {
                 dtalog.output() << "link " << g_node_vector [g_link_vector[i].from_node_seq_no].node_id
-                         << "->" << g_node_vector[g_link_vector[i].to_node_seq_no].node_id
-                         << "obs:, " << g_link_vector[i].obs_count << "est:, " << g_link_vector[i].flow_volume_per_period[tau]
-                         << "dev:," << g_link_vector[i].est_count_dev << endl;
+                                << "->" << g_node_vector[g_link_vector[i].to_node_seq_no].node_id
+                                << "obs:, " << g_link_vector[i].obs_count << "est:, " << g_link_vector[i].flow_volume_per_period[tau]
+                                << "dev:," << g_link_vector[i].est_count_dev << endl;
             }
             total_gap += abs(g_link_vector[i].est_count_dev);
             sub_total_gap_link_count += g_link_vector[i].est_count_dev / g_link_vector[i].obs_count;
@@ -3310,7 +3310,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
             if (dtalog.debug_level() == 2)
             {
                 dtalog.output() << "zone " << g_zone_vector[orig].zone_id << "A: obs:" << g_zone_vector[orig].obs_attraction
-                         << ",est:," << g_zone_vector[orig].est_attraction << ",dev:," << g_zone_vector[orig].est_attraction_dev << endl;
+                                << ",est:," << g_zone_vector[orig].est_attraction << ",dev:," << g_zone_vector[orig].est_attraction_dev << endl;
             }
 
             total_gap += abs(g_zone_vector[orig].est_attraction_dev);
@@ -3324,7 +3324,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
             if (dtalog.debug_level() == 2)
             {
                 dtalog.output() << "zone " << g_zone_vector[orig].zone_id << "P: obs:" << g_zone_vector[orig].obs_production
-                         << ",est:," << g_zone_vector[orig].est_production << ",dev:," << g_zone_vector[orig].est_production_dev << endl;
+                                << ",est:," << g_zone_vector[orig].est_production << ",dev:," << g_zone_vector[orig].est_production_dev << endl;
             }
 
             total_gap += abs(g_zone_vector[orig].est_production_dev);
@@ -3332,18 +3332,18 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
         }
     }
 
-    dtalog.output() << "ODME #" << iteration_no<< " total abs gap= " << total_gap 
-             << ",subg_link: " << sub_total_gap_link_count*100 
-             << ",subg_link: " << sub_total_gap_link_count*100 
-             << ",subg_link: " << sub_total_gap_link_count*100 
-             << ",subg_link: " << sub_total_gap_link_count*100 
-             << ",subg_link: " << sub_total_gap_link_count*100 
-             << ",subg_P: " << sub_total_gap_P_count*100 
-             << ",subg_P: " << sub_total_gap_P_count*100 
-             << ",subg_P: " << sub_total_gap_P_count*100 
-             << ",subg_P: " << sub_total_gap_P_count*100 
-             << ",subg_P: " << sub_total_gap_P_count*100 
-             << ",subg_A: " << sub_total_gap_A_count * 100 << endl;
+    dtalog.output() << "ODME #" << iteration_no<< " total abs gap= " << total_gap
+                    << ",subg_link: " << sub_total_gap_link_count*100
+                    << ",subg_link: " << sub_total_gap_link_count*100
+                    << ",subg_link: " << sub_total_gap_link_count*100
+                    << ",subg_link: " << sub_total_gap_link_count*100
+                    << ",subg_link: " << sub_total_gap_link_count*100
+                    << ",subg_P: " << sub_total_gap_P_count*100
+                    << ",subg_P: " << sub_total_gap_P_count*100
+                    << ",subg_P: " << sub_total_gap_P_count*100
+                    << ",subg_P: " << sub_total_gap_P_count*100
+                    << ",subg_P: " << sub_total_gap_P_count*100
+                    << ",subg_A: " << sub_total_gap_A_count * 100 << endl;
 }
 
 void g_update_gradient_cost_and_assigned_flow_in_column_pool(Assignment& assignment, int inner_iteration_number)
@@ -3494,17 +3494,17 @@ void g_column_pool_optimization(Assignment& assignment, int column_updating_iter
 {
     // column_updating_iterations is internal numbers of column updating
     for (int n = 0; n < column_updating_iterations; ++n)
-    { 
+    {
         dtalog.output() << "Current iteration number: " << n << endl;
         g_update_gradient_cost_and_assigned_flow_in_column_pool(assignment, n);
-        
+
         if(dtalog.debug_level() >=3)
-        { 
-            for (int i = 0; i < g_link_vector.size(); ++i) 
+        {
+            for (int i = 0; i < g_link_vector.size(); ++i)
             {
                 dtalog.output() << "link: " << g_node_vector[g_link_vector[i].from_node_seq_no].node_id << "-->"
-                         << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
-                         << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
+                                << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
+                                << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
             }
         }
     }
@@ -4467,8 +4467,8 @@ double network_assignment(int assignment_mode, int iteration_number, int column_
             dtalog.output() << "Results:" << endl;
             for (int i = 0; i < g_link_vector.size(); ++i) {
                 dtalog.output() << "link: " << g_node_vector[g_link_vector[i].from_node_seq_no].node_id << "-->"
-                         << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
-                         << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
+                                << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
+                                << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
             }
         }
 
@@ -4837,7 +4837,7 @@ void Assignment::STTrafficSimulation()
         int number_of_simu_interval_per_min = 60 / number_of_seconds_per_interval;
         if (t % (number_of_simu_interval_per_min*10) == 0)
             dtalog.output() << "simu time= " << t / number_of_simu_interval_per_min << " min, CA = " << TotalCumulative_Arrival_Count << " CD=" << TotalCumulative_Departure_Count << endl;
-        
+
         if (g_AgentTDListMap.find(t) != g_AgentTDListMap.end())
         {
             for (int Agent_v = 0; Agent_v < g_AgentTDListMap[t].m_AgentIDVector.size(); ++Agent_v)
@@ -5191,23 +5191,23 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
                                 it->second.path_volume = max(1.0f, it->second.path_volume - change);
 
                                 if (dtalog.log_odme() == 1)
-                                { 
+                                {
                                     dtalog.output() << "OD " << orig << "-> " << dest << " path id:" << i << ", prev_vol"
-                                             << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
-                                           << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
-                                             << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
-                                           << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
-                                             << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost 
-                                             << " link," << g_link_vector[link_seq_no].est_count_dev
-                                             << " P," << g_zone_vector[orig].est_production_dev
-                                             << " A," << g_zone_vector[orig].est_attraction_dev
-                                             << "proposed change = " << step_size * it->second.path_gradient_cost
-                                             << "proposed change = " << step_size * it->second.path_gradient_cost
-                                             << "proposed change = " << step_size * it->second.path_gradient_cost
-                                             << "proposed change = " << step_size * it->second.path_gradient_cost
-                                             << "proposed change = " << step_size * it->second.path_gradient_cost
-                                             << "actual change = " << change
-                                             <<"new vol = " << it->second.path_volume <<endl;
+                                                    << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost
+                                                    << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost
+                                                    << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost
+                                                    << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost
+                                                    << prev_path_volume << ", gradient_cost = " << it->second.path_gradient_cost
+                                                    << " link," << g_link_vector[link_seq_no].est_count_dev
+                                                    << " P," << g_zone_vector[orig].est_production_dev
+                                                    << " A," << g_zone_vector[orig].est_attraction_dev
+                                                    << "proposed change = " << step_size * it->second.path_gradient_cost
+                                                    << "proposed change = " << step_size * it->second.path_gradient_cost
+                                                    << "proposed change = " << step_size * it->second.path_gradient_cost
+                                                    << "proposed change = " << step_size * it->second.path_gradient_cost
+                                                    << "proposed change = " << step_size * it->second.path_gradient_cost
+                                                    << "actual change = " << change
+                                                    <<"new vol = " << it->second.path_volume <<endl;
                                 }
                             }
                         }

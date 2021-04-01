@@ -32,7 +32,7 @@ std::vector<float> g_time_parser(std::string str);
 std::string g_time_coding(float time_stamp);
 
 // Peiheng, 04/01/21, this is just a temporary fix on logging in DTALite
-// it creates another global variable (i.e. dtalog right after class DTALog) 
+// it creates another global variable (i.e. dtalog right after class DTALog)
 // shared by all translation units, which is really bad. This is a common issue
 // across the current implementation. It will be addressed properly in the refactoring.
 class DTALog{
@@ -60,7 +60,7 @@ DTALog(): logfile {"log.txt"}, ts {std::cout, logfile}
 #endif
 
     int& debug_level() {return db;}
-    int debug_level() const {return db;} 
+    int debug_level() const {return db;}
 
     int& log_sig() {return sig;}
     int log_sig() const {return sig;}
@@ -73,7 +73,7 @@ DTALog(): logfile {"log.txt"}, ts {std::cout, logfile}
 
     int& log_dta() {return dta;}
     int log_dta() const {return dta;}
-    
+
     int& log_ue() {return ue;}
     int log_ue() const {return ue;}
 };

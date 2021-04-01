@@ -16,11 +16,10 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <build_config.h>
 #include "teestream.h"
 
 // utilities functions
-// teestream& dtalog();
-std::ofstream newdtalog();
 void g_ProgramStop();
 
 void fopen_ss(FILE** file, const char* fileName, const char* mode);
@@ -56,7 +55,6 @@ DTALog(): logfile {"log.txt"}, ts {std::cout, logfile}
 
 #ifdef BUILD_EXE
     teestream& output() {return ts;}
-    std::cout << "exe" << endl;
 #else
     std::ofstream& output() {return logfile;}
 #endif

@@ -4,7 +4,7 @@ project ("DTALite")
 
 option(BUILD_EXE "BUILD Executable or not" ON)
 
-configure_file(config.h.in config.h)
+configure_file(build_config.h.in build_config.h)
 
 if(BUILD_EXE)
     message("Building executable on ${CMAKE_SYSTEM_NAME}")

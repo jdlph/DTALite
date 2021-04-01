@@ -19,7 +19,8 @@
 #include "teestream.h"
 
 // utilities functions
-teestream& dtalog();
+// teestream& dtalog();
+std::ofstream newdtalog();
 void g_ProgramStop();
 
 void fopen_ss(FILE** file, const char* fileName, const char* mode);
@@ -30,6 +31,53 @@ int g_ParserIntSequence(std::string str, std::vector<int>& vect);
 
 std::vector<float> g_time_parser(std::string str);
 std::string g_time_coding(float time_stamp);
+
+template<typename T>
+class DTALog{
+    T logfile;
+
+    int db;
+    int sig;
+    int odme;
+    int path;
+    int dta;
+    int ue;
+public:
+    // DTALog(T& f): logfile {f} {}
+    DTALog(){}
+
+    void set_log_file(T& f) {logfile = f;}
+
+    int& debug_level() {return db;}
+    int debug_level() const {return db;} 
+
+    int& log_sig() {return sig;}
+    int log_sig() const {return sig;}
+
+    int& log_odme() {return odme;}
+    int log_odme() const {return odme;}
+
+    int& log_path() {return path;}
+    int log_path() const {return path;}
+
+    int& log_dta() {return dta;}
+    int log_dta() const {return dta;}
+    
+    int& log_ue() {return ue;}
+    int log_ue() const {return ue;}
+
+    T& output() {return logfile;}
+
+    // T& operator <<(T& t, DTALog& d);
+};
+
+// template DTALog<std::ofstream>::DTALog();
+// template DTALog<teestream>::DTALog();
+
+
+// std::ofstream logfile{"log.txt"};
+static DTALog<std::ofstream> dtalog;
+
 
 class CCSVParser{
 public:
@@ -89,7 +137,7 @@ bool CCSVParser::GetValueByFieldName(std::string field_name, T& value, bool requ
     {
         if (required_field)
         {
-            dtalog() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
+            dtalog.output() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
             g_ProgramStop();
         }
         return false;
@@ -137,5 +185,7 @@ bool CCSVParser::GetValueByFieldName(std::string field_name, T& value, bool requ
         return true;
     }
 }
+
+
 
 #endif

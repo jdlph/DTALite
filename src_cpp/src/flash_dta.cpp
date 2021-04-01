@@ -21,13 +21,13 @@
 int main()
 {
     // reset all the log files to defult 0: not output; if want to output these logs set to 1
-    dtalog() << "STALite Log" << std::fixed << std::setw(12) << '\n';
-    dtalog().debug_level = 0;
-    dtalog().log_sig = 0;
-    dtalog().log_odme = 0;
-    dtalog().log_path = 0;
-    dtalog().log_dta = 0;
-    dtalog().log_ue = 0;
+    dtalog.output() << "STALite Log" << std::fixed << std::setw(12) << '\n';
+    dtalog.debug_level() = 0;
+    dtalog.log_sig() = 0;
+    dtalog.log_odme() = 0;
+    dtalog.log_path() = 0;
+    dtalog.log_dta() = 0;
+    dtalog.log_ue() = 0;
 
     int iteration_number = 20;
     int column_updating_iterations = 40;
@@ -65,7 +65,7 @@ int main()
                     assignment_mode = 3;
                 else
                 {
-                    dtalog() << "assignment_mode " << assignment_mode_str.c_str() << " in settings.csv is invalid." << std::endl;
+                    dtalog.output() << "assignment_mode " << assignment_mode_str.c_str() << " in settings.csv is invalid." << std::endl;
                     g_ProgramStop();
                 }
 
@@ -81,10 +81,10 @@ int main()
 
             if (parser_settings.SectionName == "[log]")
             {
-                parser_settings.GetValueByFieldName("sig", dtalog().log_sig, false);
-                parser_settings.GetValueByFieldName("odme", dtalog().log_odme, false);
-                parser_settings.GetValueByFieldName("path", dtalog().log_path, false);
-                parser_settings.GetValueByFieldName("ue", dtalog().log_ue, false);
+                parser_settings.GetValueByFieldName("sig", dtalog.log_sig(), false);
+                parser_settings.GetValueByFieldName("odme", dtalog.log_odme(), false);
+                parser_settings.GetValueByFieldName("path", dtalog.log_path(), false);
+                parser_settings.GetValueByFieldName("ue", dtalog.log_ue(), false);
                 
                 // just one record
                 break; 

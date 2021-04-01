@@ -25,17 +25,26 @@ using std::ofstream;
 using std::istringstream;
 using std::ostringstream;
 
-teestream& dtalog()
-{
-    static ofstream logfile{"log.txt"};
-    static teestream ts{std::cout, logfile};
+// teestream& dtalog()
+// {
+//     static ofstream logfile{"log.txt"};
+//     static teestream ts{std::cout, logfile};
 
-    return ts;
+//     return ts;
+// }
+
+
+void foo()
+{
+    ofstream logfile{"log.txt"};
+    dtalog.set_log_file(logfile);
 }
+
+
 
 void g_ProgramStop()
 {
-    dtalog() << "STALite Program stops. Press any key to terminate. Thanks!" << endl;
+    dtalog.output() << "STALite Program stops. Press any key to terminate. Thanks!" << endl;
     getchar();
     exit(0);
 }
@@ -328,7 +337,7 @@ bool CCSVParser::OpenCSVFile(string fileName, bool b_required)
     {
         if (b_required)
         {
-            dtalog() << "File " << fileName << " does not exist. Please check." << std::endl;
+            dtalog.output() << "File " << fileName << " does not exist. Please check." << std::endl;
             //g_ProgramStop();
         }
         return false;
@@ -524,7 +533,7 @@ bool CCSVParser::GetValueByFieldName(string field_name, string& value, bool requ
     {
         if (required_field)
         {
-            dtalog() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
+            dtalog.output() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
             g_ProgramStop();
         }
         return false;

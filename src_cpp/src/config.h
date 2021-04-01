@@ -11,7 +11,10 @@
 #ifndef GUARD_CONFIG_H
 #define GUARD_CONFIG_H
 
+// if you are using cmake, please #include <build_config.h>
+#ifndef _WIN32
 #include <build_config.h>
+#endif
 
 #ifdef BUILD_EXE
     double network_assignment(int assignment_mode, int iteration_number, int column_updating_iterations);

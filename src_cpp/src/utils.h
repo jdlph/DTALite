@@ -16,8 +16,12 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <build_config.h>
 #include "teestream.h"
+
+// if you are using cmake, please #include <build_config.h>
+#ifndef _WIN32
+#include <build_config.h>
+#endif
 
 // utilities functions
 void g_ProgramStop();

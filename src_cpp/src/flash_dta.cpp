@@ -5,7 +5,7 @@
  * and further prevent a violation of the GPL.
  *
  * More about "How to use GNU licenses for your own software"
- * http://www.gnu.org/licenses/gpl-howto.html 
+ * http://www.gnu.org/licenses/gpl-howto.html
  */
 
 #ifdef _WIN32
@@ -72,9 +72,9 @@ int main()
                 // iteration number of reassignment
                 parser_settings.GetValueByFieldName("column_updating_iterations", column_updating_iterations, true, true);
 
-                // the start interation of generating signals, if there is no signals set this number larger than the iteration number 
+                // the start interation of generating signals, if there is no signals set this number larger than the iteration number
                 parser_settings.GetValueByFieldName("signal_updating_iterations", signal_updating_iterations, true, false);
-                
+
                 // just one record
                 break;
             }
@@ -85,14 +85,14 @@ int main()
                 parser_settings.GetValueByFieldName("odme", dtalog().log_odme, false);
                 parser_settings.GetValueByFieldName("path", dtalog().log_path, false);
                 parser_settings.GetValueByFieldName("ue", dtalog().log_ue, false);
-                
+
                 // just one record
-                break; 
+                break;
             }
         }
     }
     // obtain initial flow values
-    network_assignment(assignment_mode, iteration_number, column_updating_iterations); 
+    network_assignment(assignment_mode, iteration_number, column_updating_iterations);
 
     return 0;
 }

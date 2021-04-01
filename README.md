@@ -7,10 +7,9 @@ The development of DTALite in Python has been halted and partially merged with [
 The legacy source and binary files are all deprecated and moved to the [archive folder](https://github.com/jdlph/DTALite/tree/main/archive) for referrence only.
 
 ## Build DTALite
-We use the cross-platform tool CMake to define the building process. A classic Visual Studio solution file is shipped as well along with the project file to **build executable only on Windows** for the convenience of users who are not familar with CMake. **Note that** they are not built on CMakeLists.txt. You will still need to [create your own Visual Studio project](https://docs.microsoft.com/en-us/visualstudio/get-started/tutorial-projects-solutions?view=vs-2019) to build the shared library of DTALite under this solution or [create new CMake projects in Visual Studio](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-160) by including the embedded [CMakeLists.txt](https://github.com/jdlph/DTALite/blob/main/src_cpp/src/CMakeLists.txt).
+We use the cross-platform tool CMake to define the building process.
 
-
-Build the executable using CMake and run it with NEXTA.
+*Build the executable using CMake and run it with NEXTA*
 ```
 # from the root directory of src (i.e., DTALite/src_cpp/src)
 $ mkdir build
@@ -19,7 +18,7 @@ $ cmake .. -DBUILD_EXE=ON
 $ cmake --build .
 ```
 
-Build the shared library using CMake and use it with a [Python interface](https://github.com/jdlph/Path4GMNS).
+*Build the shared library using CMake and use it with a [Python interface](https://github.com/jdlph/Path4GMNS)*
 ```
 # from the root directory of src (i.e., DTALite/src_cpp/src)
 $ mkdir build
@@ -29,6 +28,14 @@ $ cmake --build .
 ```
 
 You can remove -DBUILD_EXE=ON or -DBUILD_EXE=OFF if you prefer to manually change the value of BUILD_EXE in [CMakeLists.txt](https://github.com/jdlph/DTALite/blob/main/src_cpp/src/CMakeLists.txt).
+
+*Windows Users*
+
+A classic Visual Studio solution file is shipped as well along with the project file to **build executable only on Windows** for the convenience of users who are not familar with CMake. **Note that** they are not built on CMakeLists.txt. If you are planning to build the shared library of DTALite, there are three ways to do it as shown below.
+
+1. Let CMake automatically generate solution and project files for you by using the commands above. It is the easiest and recommmended way;
+2. [Create your own Visual Studio project](https://docs.microsoft.com/en-us/visualstudio/get-started/tutorial-projects-solutions?view=vs-2019) under the shipped solution;
+3. [Create new CMake projects in Visual Studio](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-160) by including the embedded [CMakeLists.txt](https://github.com/jdlph/DTALite/blob/main/src_cpp/src/CMakeLists.txt).
 
 ## Get Started with DTALite
 ### Step 1: White Paper and Application

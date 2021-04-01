@@ -5,7 +5,7 @@
  * and further prevent a violation of the GPL.
  *
  * More about "How to use GNU licenses for your own software"
- * http://www.gnu.org/licenses/gpl-howto.html 
+ * http://www.gnu.org/licenses/gpl-howto.html
  */
 
 #ifndef GUARD_CONFIG_H

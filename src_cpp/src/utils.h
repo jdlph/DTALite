@@ -5,7 +5,7 @@
  * and further prevent a violation of the GPL.
  *
  * More about "How to use GNU licenses for your own software"
- * http://www.gnu.org/licenses/gpl-howto.html 
+ * http://www.gnu.org/licenses/gpl-howto.html
  */
 
 #ifndef GUARD_UTILS_H
@@ -39,12 +39,12 @@ public:
     bool m_bSkipFirstLine;
     bool m_bDataHubSingleCSVFile;
     bool m_bLastSectionRead;
-    
+
     std::ifstream inFile;
     std::string mFileName;
     std::string m_DataHubSectionName;
     std::string SectionName;
-    
+
     std::vector<std::string> LineFieldsValue;
     std::vector<int> LineIntegerVector;
     std::vector<std::string> Headers;
@@ -56,12 +56,12 @@ public:
 
     ~CCSVParser()
     {
-        if (inFile.is_open()) 
+        if (inFile.is_open())
             inFile.close();
     }
 
     // inline member functions
-    std::vector<std::string> GetHeaderVector() 
+    std::vector<std::string> GetHeaderVector()
     {
         return Headers;
     }
@@ -82,7 +82,7 @@ public:
 
 // Peiheng, 03/22/21, to avoid implicit instantiations in flash_dta.cpp and main_api.cpp for this template function only
 // all the other non-inline functions are implemented in utils.cpp
-template <class T> 
+template <class T>
 bool CCSVParser::GetValueByFieldName(std::string field_name, T& value, bool required_field, bool NonnegativeFlag)
 {
     if (FieldsIndices.find(field_name) == FieldsIndices.end())
@@ -127,7 +127,7 @@ bool CCSVParser::GetValueByFieldName(std::string field_name, T& value, bool requ
         if (required_field)
         {
             if(NonnegativeFlag)
-            { 
+            {
                 if (converted_value < 0)
                     converted_value = 0;
             }

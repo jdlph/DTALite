@@ -32,9 +32,13 @@ int g_ParserIntSequence(std::string str, std::vector<int>& vect);
 std::vector<float> g_time_parser(std::string str);
 std::string g_time_coding(float time_stamp);
 
-template<typename T>
+// Peiheng, 04/01/21, this is just a temporary fix on logging in DTALite
+// it creates another global variable (i.e. dtalog right after class DTALog) 
+// shared by all translation units, which is really bad. This is a common issue
+// across the current implementation. It will be addressed properly in the refactoring.
 class DTALog{
-    T logfile;
+    std::ofstream logfile;
+    teestream ts;
 
     int db;
     int sig;
@@ -43,10 +47,19 @@ class DTALog{
     int dta;
     int ue;
 public:
-    // DTALog(T& f): logfile {f} {}
-    DTALog(){}
 
-    void set_log_file(T& f) {logfile = f;}
+DTALog(): logfile {"log.txt"}, ts {std::cout, logfile}
+{
+}
+
+~DTALog() = default;
+
+#ifdef BUILD_EXE
+    teestream& output() {return ts;}
+    std::cout << "exe" << endl;
+#else
+    std::ofstream& output() {return logfile;}
+#endif
 
     int& debug_level() {return db;}
     int debug_level() const {return db;} 
@@ -65,19 +78,9 @@ public:
     
     int& log_ue() {return ue;}
     int log_ue() const {return ue;}
-
-    T& output() {return logfile;}
-
-    // T& operator <<(T& t, DTALog& d);
 };
 
-// template DTALog<std::ofstream>::DTALog();
-// template DTALog<teestream>::DTALog();
-
-
-// std::ofstream logfile{"log.txt"};
-static DTALog<std::ofstream> dtalog;
-
+static DTALog dtalog;
 
 class CCSVParser{
 public:

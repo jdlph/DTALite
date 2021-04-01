@@ -15,8 +15,8 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "utils.h"
 #include "config.h"
+#include "utils.h"
 
 int main()
 {

@@ -25,23 +25,6 @@ using std::ofstream;
 using std::istringstream;
 using std::ostringstream;
 
-// teestream& dtalog()
-// {
-//     static ofstream logfile{"log.txt"};
-//     static teestream ts{std::cout, logfile};
-
-//     return ts;
-// }
-
-
-void foo()
-{
-    ofstream logfile{"log.txt"};
-    dtalog.set_log_file(logfile);
-}
-
-
-
 void g_ProgramStop()
 {
     dtalog.output() << "STALite Program stops. Press any key to terminate. Thanks!" << endl;

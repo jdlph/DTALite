@@ -2776,9 +2776,6 @@ void g_ReadInputData(Assignment& assignment)
         dtalog.output() << "Step XX: Reading movement.csv data with " << prohibited_count << " prohibited records." << endl;
         parser_movement.CloseCSVFile();
     }
-
-    // for testing
-    cout << "g_ReadInputData" <<endl;
 }
 
 void g_reload_service_arc_data(Assignment& assignment)
@@ -4404,9 +4401,6 @@ void  CLink::CalculateTD_VDFunction()
 
 double network_assignment(int assignment_mode, int iteration_number, int column_updating_iterations)
 {
-    // for testing
-    cout << "network assignment" << endl;
-
     int signal_updating_iterations = 0;
 
     // k iterations for column generation

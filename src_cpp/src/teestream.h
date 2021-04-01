@@ -5,17 +5,17 @@
  * and further prevent a violation of the GPL.
  *
  * More about "How to use GNU licenses for your own software"
- * http://www.gnu.org/licenses/gpl-howto.html 
- * 
- * 
- * A class that simultaneously outputs to ostream and ofstream objects 
- * source: http://www.cplusplus.com/forum/general/64174/#msg347154 
- * 
+ * http://www.gnu.org/licenses/gpl-howto.html
+ *
+ *
+ * A class that simultaneously outputs to ostream and ofstream objects
+ * source: http://www.cplusplus.com/forum/general/64174/#msg347154
+ *
  * Minor changes by Peiheng Li include,
  *  1. replacing typedef with using;
- *  2. removing the empty space between std::char_traits<C> and '>' in 
+ *  2. removing the empty space between std::char_traits<C> and '>' in
  *     template <typename C, typename T = std::char_traits<C>> as compliers
- *     complying C++11 and higer can differentiate the ending ">>" with the istream 
+ *     complying C++11 and higer can differentiate the ending ">>" with the istream
  *     operator ">>".
  */
 
@@ -81,7 +81,7 @@ struct basic_teestream : public std::basic_ostream<C, T>
 
     ~basic_teestream() { stmbuf.pubsync(); }
 
-private: 
+private:
     streambuff_type stmbuf;
 };
 

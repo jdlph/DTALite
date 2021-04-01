@@ -5,7 +5,7 @@
  * and further prevent a violation of the GPL.
  *
  * More about "How to use GNU licenses for your own software"
- * http://www.gnu.org/licenses/gpl-howto.html 
+ * http://www.gnu.org/licenses/gpl-howto.html
  */
 
 #include <iostream>
@@ -39,7 +39,7 @@ void fopen_ss(FILE** file, const char* fileName, const char* mode)
 
 float g_read_float(FILE* f)
 {
-    /*    
+    /*
         read a floating point number from the current pointer of the file,
         skip all spaces
      */
@@ -60,7 +60,7 @@ float g_read_float(FILE* f)
         else
             flag = 1;
     }
-    
+
     if (ch == EOF) return -1;
     while (isdigit(ch) || ch == '.') {
         buf[i++] = ch;
@@ -78,7 +78,7 @@ float g_read_float(FILE* f)
 }
 
 //split the string by "_"
-vector<string> split(const string &s, const string &seperator) 
+vector<string> split(const string &s, const string &seperator)
 {
     vector<string> result;
     typedef string::size_type string_size;
@@ -353,7 +353,7 @@ bool CCSVParser::ReadRecord()
 
 bool CCSVParser::ReadSectionHeader(string s)
 {
-    //skip // data 
+    //skip // data
     Headers.clear();
     FieldsIndices.clear();
 

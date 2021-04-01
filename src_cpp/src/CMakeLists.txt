@@ -20,8 +20,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 # enable OpenMP
 if (CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
     set(CMAKE_CXX_FLAGS "-Xpreprocessor -fopenmp -fpic")
-else()
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_CXX_FLAGS "-fopenmp -fpic")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    # do nothing as MSVC does not support -fopenmp -fpic
+else()
+    message("Please set OpenMP flag compatible with your compiler")
 endif()
 
 # note CMAKE_BUILD_TYPE WILL BE INGNORED for IDE generators, like Visual Studio and Xcode

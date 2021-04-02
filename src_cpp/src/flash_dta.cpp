@@ -85,7 +85,7 @@ int main()
                 parser_settings.GetValueByFieldName("odme", dtalog.log_odme(), false);
                 parser_settings.GetValueByFieldName("path", dtalog.log_path(), false);
                 parser_settings.GetValueByFieldName("ue", dtalog.log_ue(), false);
-                
+
                 // just one record
                 break;
             }

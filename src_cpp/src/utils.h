@@ -191,6 +191,4 @@ bool CCSVParser::GetValueByFieldName(std::string field_name, T& value, bool requ
     }
 }
 
-
-
 #endif

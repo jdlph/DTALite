@@ -2604,25 +2604,25 @@ void g_ReadInputData(Assignment& assignment)
                 link.VDF_period[tau].ending_time_slot_no = assignment.g_DemandPeriodVector[tau].ending_time_slot_no;
 
                 int demand_period_id = assignment.g_DemandPeriodVector[tau].demand_period_id;
-                sprintf (VDF_field_name, "VDF_fftt%d", demand_period_id);
+                sprintf(VDF_field_name, "VDF_fftt%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].FFTT,false,false);  // FFTT should be per min
 
-                sprintf (VDF_field_name, "VDF_cap%d", demand_period_id);
+                sprintf(VDF_field_name, "VDF_cap%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].capacity, false, false);  // capacity should be per period per link (include all lanes)
 
-                sprintf (VDF_field_name, "VDF_alpha%d", demand_period_id);
+                sprintf(VDF_field_name, "VDF_alpha%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].alpha, false, false);
 
-                sprintf (VDF_field_name, "VDF_beta%d", demand_period_id);
+                sprintf(VDF_field_name, "VDF_beta%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].beta, false, false);
 
                 sprintf(VDF_field_name, "VDF_PHF%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].PHF, false, false);
 
-                sprintf (VDF_field_name, "VDF_mu%d", demand_period_id);
+                sprintf(VDF_field_name, "VDF_mu%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].mu, false, false);  // mu should be per hour per link, so that we can calculate congestion duration and D/mu in BPR-X
 
-                //sprintf (VDF_field_name, "VDF_gamma%d", demand_period_id);  // remove gamma
+                //sprintf(VDF_field_name, "VDF_gamma%d", demand_period_id);  // remove gamma
                 //parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].gamma);
             }
 
@@ -3824,8 +3824,7 @@ void g_output_simulation_result(Assignment& assignment)
                                                          it->second.path_volume,
                                                          path_toll,
                                                          path_travel_time,
-                                                         path_distance
-                                                        );
+                                                         path_distance);
 
                                     /* Format and print various data */
                                     for (int ni = 0+ virtual_link_delta; ni <it->second.m_node_size- virtual_link_delta; ++ni)
@@ -3889,8 +3888,7 @@ void g_output_simulation_result(Assignment& assignment)
                                                              assignment.g_DemandPeriodVector[tau].demand_period.c_str(),
                                                              path_toll,
                                                              path_travel_time,
-                                                             path_distance
-                                        );
+                                                             path_distance);
 
                                         /* Format and print various data */
 

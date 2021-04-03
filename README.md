@@ -1,8 +1,8 @@
 # Cross-Platform DTALite
 
-This repo is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. As it still has legacy code which either does not represent the best practices or could be optimized for better performance, we have lanuched a project to further refactor it using modern C++ (mainly C++11 and C++14) in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring). It will be made public once it is mature.
+This repo is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. As it still has legacy code which either does not represent the best practices or could be optimized for better performance, we have lanuched another project to further refactor it using modern C++ (mainly C++11 and C++14) in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring). It will be made public once it is mature.
 
-The development of DTALite in Python has been halted and partially merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS), which originates from the same sorce code. It will be resumed in the future when Path4GMNS is fully implemented.
+The development of DTALite in Python has been halted and partially merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS)(which originates from the same sorce code). It will be resumed in the future when Path4GMNS is fully implemented.
 
 The legacy source and binary files are all deprecated and moved to the [archive folder](https://github.com/jdlph/DTALite/tree/main/archive) for referrence only.
 
@@ -58,7 +58,7 @@ A classic Visual Studio solution file is shipped as well along with the project 
 ### Other References: 
 **1. Parallel computing algorithms**
 
-*Qu, Y., & Zhou, X. (2017). Large-scale dynamic transportation network simulation: A space-time-event parallel computing approach. Transportation research part c: Emerging technologies, 75, 1-16.*
+*Qu, Y., & Zhou, X. (2017). Large-scale dynamic transportation network simulation: A space-time-event parallel computing approach. Transportation Research Part C: Emerging technologies, 75, 1-16.*
 
 **2. OD demand estimation**
 

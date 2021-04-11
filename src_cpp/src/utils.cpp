@@ -544,9 +544,3 @@ bool CCSVParser::GetValueByFieldName(string field_name, string& value, bool requ
         return true;
     }
 }
-
-// Peiheng, 03/22/21, to avoid implicit instantiations in flash_dta.cpp and main_api.cpp
-// the other (general) way to move this definition to utils.h
-// template bool CCSVParser::GetValueByFieldName(string field_name, int& value, bool required_field, bool NonnegativeFlag);
-// template bool CCSVParser::GetValueByFieldName(string field_name, float& value, bool required_field, bool NonnegativeFlag);
-// template bool CCSVParser::GetValueByFieldName(string field_name, double& value, bool required_field, bool NonnegativeFlag);

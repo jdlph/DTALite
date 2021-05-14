@@ -916,7 +916,7 @@ public:
     CLink() :main_node_id{ -1 }, NEMA_phase_number{ -1 }, obs_count{ -1 }, upper_bound_flag{ 0 }, est_count_dev{ 0 },
         BWTT_in_simulation_interval{ 100 }, zone_seq_no_for_outgoing_connector{ -1 }, number_of_lanes{ 1 }, lane_capacity{ 1999 },
         length{ 1 }, free_flow_travel_time_in_min{ 1 }, toll{ 0 }, route_choice_cost{ 0 }, link_spatial_capacity{ 100 },
-        service_arc_flag{ false }, traffic_flow_code{ 0 }, spatial_capacity_in_vehicles{ 999999 }
+        service_arc_flag{ false }, traffic_flow_code{ 0 }, spatial_capacity_in_vehicles{ 999999 }, link_type { 2 }
     {
         for (int tau = 0; tau < _MAX_TIMEPERIODS; ++tau)
         {
@@ -2526,8 +2526,6 @@ void g_ReadInputData(Assignment& assignment)
 
             assignment.g_link_id_map[link.link_id] = 1;
 
-            parser_link.GetValueByFieldName("link_type", link.link_type);
-
             string movement_str;
             parser_link.GetValueByFieldName("movement_str", movement_str, false);
             parser_link.GetValueByFieldName("geometry", link.geometry,false);
@@ -2546,16 +2544,26 @@ void g_ReadInputData(Assignment& assignment)
                 link.NEMA_phase_number = NEMA_phase_number;
             }
 
-            if (assignment.g_LinkTypeMap.find(link.link_type) == assignment.g_LinkTypeMap.end())
+            // Peiheng, 05/13/21, if setting.csv does not have corresponding link type or the whole section is missing, set it as 2 (i.e., Major arterial)
+            int link_type = 2;
+            parser_link.GetValueByFieldName("link_type", link_type, false);
+
+            if (assignment.g_LinkTypeMap.find(link_type) == assignment.g_LinkTypeMap.end())
             {
-                dtalog.output() << "link type " << link.link_type << " in link.csv is not defined for link " << from_node_id << "->"<< to_node_id << " in link_type.csv" <<endl;
-                g_ProgramStop();
+                dtalog.output() << "link type " << link.link_type << " in link.csv is not defined for link " << from_node_id << "->"<< to_node_id << " in link_type.csv" << endl;
+                // link.link_type has been taken care by its default constructor
+                //g_ProgramStop();
+            }
+            else
+            {
+                // link type should be defined in settings.csv
+                link.link_type = link_type;
             }
 
-            if (assignment.g_LinkTypeMap[link.link_type].type_code == "c" && g_node_vector[internal_from_node_seq_no].zone_id >=0)
+            if (assignment.g_LinkTypeMap[link.link_type].type_code == "c" && g_node_vector[internal_from_node_seq_no].zone_id >= 0)
             {
                 if(assignment.g_zoneid_to_zone_seq_no_mapping.find(g_node_vector[internal_from_node_seq_no].zone_id) != assignment.g_zoneid_to_zone_seq_no_mapping.end())
-                link.zone_seq_no_for_outgoing_connector = assignment.g_zoneid_to_zone_seq_no_mapping [g_node_vector[internal_from_node_seq_no].zone_id];
+                    link.zone_seq_no_for_outgoing_connector = assignment.g_zoneid_to_zone_seq_no_mapping [g_node_vector[internal_from_node_seq_no].zone_id];
             }
 
             parser_link.GetValueByFieldName("toll", link.toll,false,false);
@@ -2605,7 +2613,7 @@ void g_ReadInputData(Assignment& assignment)
 
                 int demand_period_id = assignment.g_DemandPeriodVector[tau].demand_period_id;
                 sprintf(VDF_field_name, "VDF_fftt%d", demand_period_id);
-                parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].FFTT,false,false);  // FFTT should be per min
+                parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].FFTT, false, false);  // FFTT should be per min
 
                 sprintf(VDF_field_name, "VDF_cap%d", demand_period_id);
                 parser_link.GetValueByFieldName(VDF_field_name, link.VDF_period[tau].capacity, false, false);  // capacity should be per period per link (include all lanes)

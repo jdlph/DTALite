@@ -2550,7 +2550,7 @@ void g_ReadInputData(Assignment& assignment)
 
             if (assignment.g_LinkTypeMap.find(link_type) == assignment.g_LinkTypeMap.end())
             {
-                dtalog.output() << "link type " << link.link_type << " in link.csv is not defined for link " << from_node_id << "->"<< to_node_id << " in link_type.csv" << endl;
+                dtalog.output() << "link type " << link_type << " in link.csv is not defined for link " << from_node_id << "->"<< to_node_id << " in link_type.csv" << endl;
                 // link.link_type has been taken care by its default constructor
                 //g_ProgramStop();
             }

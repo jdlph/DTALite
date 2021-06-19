@@ -50,17 +50,17 @@ using std::istringstream;
 // some basic parameters setting
 
 //Pls make sure the _MAX_K_PATH > Agentlite.cpp's g_number_of_column_generation_iterations+g_reassignment_number_of_K_paths and the _MAX_ZONE remain the same with .cpp's defination
-constexpr auto _MAX_LABEL_COST = 1.0e+15;
+constexpr auto MAX_LABEL_COST = 1.0e+15;
 
-constexpr auto _MAX_AGNETTYPES = 4; //because of the od demand store format,the MAX_demandtype must >=g_DEMANDTYPES.size()+1;
-constexpr auto _MAX_TIMEPERIODS = 4; // time period set to 4: mid night, morning peak, mid-day and afternoon peak;
-constexpr auto _MAX_MEMORY_BLOCKS = 20;
+constexpr auto MAX_AGNETTYPES = 4; //because of the od demand store format,the MAX_demandtype must >=g_DEMANDTYPES.size()+1;
+constexpr auto MAX_TIMEPERIODS = 4; // time period set to 4: mid night, morning peak, mid-day and afternoon peak;
+constexpr auto MAX_MEMORY_BLOCKS = 20;
 
-constexpr auto _MAX_LINK_SIZE_IN_A_PATH = 1000;
-constexpr auto _MAX_LINK_SIZE_FOR_A_NODE = 200;
+constexpr auto MAX_LINK_SIZE_IN_A_PATH = 1000;
+constexpr auto MAX_LINK_SIZE_FOR_A_NODE = 200;
 
-constexpr auto _MAX_TIMESLOT_PerPeriod = 100; // max 96 15-min slots per day
-constexpr auto _default_saturation_flow_rate = 1530;
+constexpr auto MAX_TIMESLOT_PerPeriod = 100; // max 96 15-min slots per day
+constexpr auto default_saturation_flow_rate = 1530;
 
 constexpr auto MIN_PER_TIMESLOT = 15;
 
@@ -611,7 +611,7 @@ public:
 
         for (int i = 0; i < number_of_agent_types; ++i)
         {
-            for (int tau = 0;tau < g_number_of_demand_periods;++tau)
+            for (int tau = 0;tau < g_number_of_demand_periods; ++tau)
                 total_demand[i][tau] = 0.0;
         }
 
@@ -671,7 +671,7 @@ public:
     std::map<string, int> demand_period_to_seqno_mapping;
     std::map<string, int> agent_type_2_seqno_mapping;
 
-    float total_demand[_MAX_AGNETTYPES][_MAX_TIMEPERIODS];
+    float total_demand[MAX_AGNETTYPES][MAX_TIMEPERIODS];
     float g_DemandGlobalMultiplier;
 
     // used in ST Simulation
@@ -703,7 +703,7 @@ public:
         starting_time_slot_no{ 0 }, ending_time_slot_no{ 0 },
         cycle_length{ 29 }, red_time{ 0 }, t0{ 0 }, t3{ 0 }
     {
-        for (int t = 0; t < _MAX_TIMESLOT_PerPeriod; ++t)
+        for (int t = 0; t < MAX_TIMESLOT_PerPeriod; ++t)
         {
             Queue[t] = 0;
             waiting_time[t] = 0;
@@ -719,7 +719,7 @@ public:
 
     float get_waiting_time(int relative_time_slot_no)
     {
-        if (relative_time_slot_no >=0 && relative_time_slot_no < _MAX_TIMESLOT_PerPeriod)
+        if (relative_time_slot_no >=0 && relative_time_slot_no < MAX_TIMESLOT_PerPeriod)
             return waiting_time[relative_time_slot_no];
         else
             return 0;
@@ -728,7 +728,7 @@ public:
     float PerformSignalVDF(float hourly_per_lane_volume, float red, float cycle_length)
     {
         float lambda = hourly_per_lane_volume;
-        float mu = _default_saturation_flow_rate; //default saturation flow rates
+        float mu = default_saturation_flow_rate; //default saturation flow rates
         float s_bar = 1.0 / 60.0 * red * red / (2*cycle_length); // 60.0 is used to convert sec to min
         float uniform_delay = s_bar / max(1 - lambda / mu, 0.1f);
 
@@ -766,7 +766,7 @@ public:
 
         // Step 1: Initialization
         int L = ending_time_slot_no - starting_time_slot_no;  // in 15 min slot
-        if (L >= _MAX_TIMESLOT_PerPeriod - 1)
+        if (L >= MAX_TIMESLOT_PerPeriod - 1)
             return 0;
 
         for (int t = starting_time_slot_no; t <= ending_time_slot_no; ++t)
@@ -799,7 +799,7 @@ public:
             P = congestion_period_P * 4; //unit: 15 time slot
 
             t0 = max(0.0, mid_time_slot_no - P / 2.0);
-            t3 = min((double)_MAX_TIMESLOT_PerPeriod-1, mid_time_slot_no + P / 2.0);
+            t3 = min((double)MAX_TIMESLOT_PerPeriod-1, mid_time_slot_no + P / 2.0);
 
             // we need to recalculate gamma coefficient based on D/C ratio. based on assumption of beta = 4;
             // average waiting time based on eq. (32)
@@ -901,12 +901,12 @@ public:
     float avg_waiting_time = 0;
 
     // t starting from starting_time_slot_no if we map back to the 24 hour horizon
-    float Queue[_MAX_TIMESLOT_PerPeriod];
-    float waiting_time[_MAX_TIMESLOT_PerPeriod];
-    float arrival_rate[_MAX_TIMESLOT_PerPeriod];
+    float Queue[MAX_TIMESLOT_PerPeriod];
+    float waiting_time[MAX_TIMESLOT_PerPeriod];
+    float arrival_rate[MAX_TIMESLOT_PerPeriod];
 
-    float discharge_rate[_MAX_TIMESLOT_PerPeriod];
-    float travel_time[_MAX_TIMESLOT_PerPeriod];
+    float discharge_rate[MAX_TIMESLOT_PerPeriod];
+    float travel_time[MAX_TIMESLOT_PerPeriod];
 };
 
 class CLink
@@ -918,7 +918,7 @@ public:
         length{ 1 }, free_flow_travel_time_in_min{ 1 }, toll{ 0 }, route_choice_cost{ 0 }, link_spatial_capacity{ 100 },
         service_arc_flag{ false }, traffic_flow_code{ 0 }, spatial_capacity_in_vehicles{ 999999 }, link_type { 2 }
     {
-        for (int tau = 0; tau < _MAX_TIMEPERIODS; ++tau)
+        for (int tau = 0; tau < MAX_TIMEPERIODS; ++tau)
         {
             flow_volume_per_period[tau] = 0;
             queue_length_perslot[tau] = 0;
@@ -929,7 +929,7 @@ public:
             TDBaseQueue[tau] = 0;
             //cost_perhour[tau] = 0;
 
-            for(int at = 0; at < _MAX_AGNETTYPES; ++at)
+            for(int at = 0; at < MAX_AGNETTYPES; ++at)
                 volume_per_period_per_at[tau][at] = 0;
         }
     }
@@ -1012,12 +1012,12 @@ public:
     float PCE;
     float fftt;
 
-    CVDF_Period VDF_period[_MAX_TIMEPERIODS];
+    CVDF_Period VDF_period[MAX_TIMEPERIODS];
 
-    float TDBaseTT[_MAX_TIMEPERIODS];
-    float TDBaseCap[_MAX_TIMEPERIODS];
-    float TDBaseFlow[_MAX_TIMEPERIODS];
-    float TDBaseQueue[_MAX_TIMEPERIODS];
+    float TDBaseTT[MAX_TIMEPERIODS];
+    float TDBaseCap[MAX_TIMEPERIODS];
+    float TDBaseFlow[MAX_TIMEPERIODS];
+    float TDBaseQueue[MAX_TIMEPERIODS];
 
     int type;
 
@@ -1025,12 +1025,12 @@ public:
     //float flow_volume;
     //float travel_time;
 
-    float flow_volume_per_period[_MAX_TIMEPERIODS];
-    float volume_per_period_per_at[_MAX_TIMEPERIODS][_MAX_AGNETTYPES];
+    float flow_volume_per_period[MAX_TIMEPERIODS];
+    float volume_per_period_per_at[MAX_TIMEPERIODS][MAX_AGNETTYPES];
 
-    float queue_length_perslot[_MAX_TIMEPERIODS];  // # of vehicles in the vertical point queue
-    float travel_time_per_period[_MAX_TIMEPERIODS];
-    float travel_marginal_cost_per_period[_MAX_TIMEPERIODS][_MAX_AGNETTYPES];
+    float queue_length_perslot[MAX_TIMEPERIODS];  // # of vehicles in the vertical point queue
+    float travel_time_per_period[MAX_TIMEPERIODS];
+    float travel_marginal_cost_per_period[MAX_TIMEPERIODS][MAX_AGNETTYPES];
 
     int number_of_periods;
 
@@ -1302,8 +1302,8 @@ public:
         if (bBuildNetwork)
             return;
 
-        int m_outgoing_link_seq_no_vector[_MAX_LINK_SIZE_FOR_A_NODE];
-        int m_to_node_seq_no_vector[_MAX_LINK_SIZE_FOR_A_NODE];
+        int m_outgoing_link_seq_no_vector[MAX_LINK_SIZE_FOR_A_NODE];
+        int m_to_node_seq_no_vector[MAX_LINK_SIZE_FOR_A_NODE];
 
         for (int i = 0; i < g_link_vector.size(); ++i)
         {
@@ -1327,7 +1327,7 @@ public:
 
                     outgoing_link_size++;
 
-                    if (outgoing_link_size >= _MAX_LINK_SIZE_FOR_A_NODE)
+                    if (outgoing_link_size >= MAX_LINK_SIZE_FOR_A_NODE)
                     {
                         dtalog.output() << " Error: outgoing_link_size >= _MAX_LINK_SIZE_FOR_A_NODE" << endl;
                         g_ProgramStop();
@@ -1476,7 +1476,7 @@ public:
         {
             // not scanned
             m_node_status_array[i] = 0;
-            m_node_label_cost[i] = _MAX_LABEL_COST;
+            m_node_label_cost[i] = MAX_LABEL_COST;
             // pointer to previous NODE INDEX from the current label at current node and time
             m_link_predecessor[i] = -1;
             // pointer to previous NODE INDEX from the current label at current node and time
@@ -1819,7 +1819,7 @@ void g_ReadDemandFileBasedOnDemandFileList(Assignment& assignment)
                     }
                 }
 
-                if (demand_period_no > _MAX_TIMEPERIODS)
+                if (demand_period_no > MAX_TIMEPERIODS)
                 {
                     dtalog.output() << "demand_period_no should be less than settings in demand_period section. Please change the parameter settings in the source code." << endl;
                     g_ProgramStop();
@@ -2301,9 +2301,9 @@ void g_ReadInputData(Assignment& assignment)
             dtalog.output() << "Error: Section agent_type does not contain information." << endl;
     }
 
-    if (assignment.g_AgentTypeVector.size() >= _MAX_AGNETTYPES)
+    if (assignment.g_AgentTypeVector.size() >= MAX_AGNETTYPES)
     {
-        dtalog.output() << "Error: agent_type = " << assignment.g_AgentTypeVector.size() << " in section agent_type is too large. " << "_MAX_AGNETTYPES = " << _MAX_AGNETTYPES << "Please contact program developers!";
+        dtalog.output() << "Error: agent_type = " << assignment.g_AgentTypeVector.size() << " in section agent_type is too large. " << "_MAX_AGNETTYPES = " << MAX_AGNETTYPES << "Please contact program developers!";
         g_ProgramStop();
     }
 
@@ -2560,10 +2560,11 @@ void g_ReadInputData(Assignment& assignment)
                 link.link_type = link_type;
             }
 
-            if (assignment.g_LinkTypeMap[link.link_type].type_code == "c" && g_node_vector[internal_from_node_seq_no].zone_id >= 0)
+            int zone_org_id = g_node_vector[internal_from_node_seq_no].zone_org_id;
+            if (assignment.g_LinkTypeMap[link.link_type].type_code == "c" && zone_org_id >= 0)
             {
-                if(assignment.g_zoneid_to_zone_seq_no_mapping.find(g_node_vector[internal_from_node_seq_no].zone_id) != assignment.g_zoneid_to_zone_seq_no_mapping.end())
-                    link.zone_seq_no_for_outgoing_connector = assignment.g_zoneid_to_zone_seq_no_mapping [g_node_vector[internal_from_node_seq_no].zone_id];
+                if(assignment.g_zoneid_to_zone_seq_no_mapping.find(zone_org_id) != assignment.g_zoneid_to_zone_seq_no_mapping.end())
+                    link.zone_seq_no_for_outgoing_connector = assignment.g_zoneid_to_zone_seq_no_mapping[zone_org_id];
             }
 
             parser_link.GetValueByFieldName("toll", link.toll,false,false);
@@ -3733,7 +3734,7 @@ void g_output_simulation_result(Assignment& assignment)
     {
         dtalog.output() << "writing agent.csv.." << endl;
 
-        float path_time_vector[_MAX_LINK_SIZE_IN_A_PATH];
+        float path_time_vector[MAX_LINK_SIZE_IN_A_PATH];
         FILE* g_pFileODMOE = nullptr;
         fopen_ss(&g_pFileODMOE,"agent.csv", "w");
 
@@ -4155,7 +4156,7 @@ void g_assign_computing_tasks_to_memory_blocks(Assignment& assignment)
     // step 2: assign node to thread
     dtalog.output() << "Step 2: Assigning computing tasks to memory blocks..." << endl;
 
-    NetworkForSP* PointerMatrx[_MAX_AGNETTYPES][_MAX_TIMEPERIODS][_MAX_MEMORY_BLOCKS];
+    NetworkForSP* PointerMatrx[MAX_AGNETTYPES][MAX_TIMEPERIODS][MAX_MEMORY_BLOCKS];
 
     for (int at = 0; at < assignment.g_AgentTypeVector.size(); ++at)
     {
@@ -4393,7 +4394,7 @@ void  CLink::CalculateTD_VDFunction()
             travel_time_per_period[tau] = VDF_period[tau].PerformSignalVDF(hourly_per_lane_volume, red_time, cycle_length);
             travel_time_per_period[tau] += VDF_period[tau].PerformBPR(flow_volume_per_period[tau]);
             // update capacity using the effective discharge rates, will be passed in to the following BPR function
-            VDF_period[tau].capacity = (1 - red_time / cycle_length) * _default_saturation_flow_rate * number_of_lanes;
+            VDF_period[tau].capacity = (1 - red_time / cycle_length) * default_saturation_flow_rate * number_of_lanes;
         }
 
         // either non-signalized or signalized with red_time < 1 and cycle_length < 30
@@ -5213,7 +5214,7 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
                                                     << "proposed change = " << step_size * it->second.path_gradient_cost
                                                     << "proposed change = " << step_size * it->second.path_gradient_cost
                                                     << "actual change = " << change
-                                                    <<"new vol = " << it->second.path_volume <<endl;
+                                                    << "new vol = " << it->second.path_volume <<endl;
                                 }
                             }
                         }

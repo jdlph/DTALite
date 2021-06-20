@@ -22,12 +22,6 @@ int main()
 {
     // reset all the log files to defult 0: not output; if want to output these logs set to 1
     dtalog.output() << "STALite Log" << std::fixed << std::setw(12) << '\n';
-    dtalog.debug_level() = 0;
-    dtalog.log_sig() = 0;
-    dtalog.log_odme() = 0;
-    dtalog.log_path() = 0;
-    dtalog.log_dta() = 0;
-    dtalog.log_ue() = 0;
 
     int iteration_number = 20;
     int column_updating_iterations = 40;

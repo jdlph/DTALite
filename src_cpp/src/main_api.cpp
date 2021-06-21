@@ -40,7 +40,9 @@ using std::max;
 using std::min;
 using std::cout;
 using std::endl;
+using std::nothrow;
 using std::string;
+using std::list;
 using std::vector;
 using std::map;
 using std::ifstream;
@@ -87,7 +89,7 @@ T** AllocateDynamicArray(int nRows, int nCols)
 {
     T** dynamicArray;
 
-    dynamicArray = new (std::nothrow) T*[nRows];
+    dynamicArray = new (nothrow) T*[nRows];
 
     if (!dynamicArray)
     {
@@ -97,7 +99,7 @@ T** AllocateDynamicArray(int nRows, int nCols)
 
     for (int i = 0; i < nRows; ++i)
     {
-        dynamicArray[i] = new (std::nothrow) T[nCols];
+        dynamicArray[i] = new (nothrow) T[nCols];
 
         if (!dynamicArray[i])
         {
@@ -124,7 +126,7 @@ void DeallocateDynamicArray(T** dArray, int nRows, int nCols)
 template <typename T>
 T*** Allocate3DDynamicArray(int nX, int nY, int nZ)
 {
-    T*** dynamicArray = new (std::nothrow) T**[nX];
+    T*** dynamicArray = new (nothrow) T**[nX];
 
     if (!dynamicArray)
     {
@@ -139,7 +141,7 @@ T*** Allocate3DDynamicArray(int nX, int nY, int nZ)
             dtalog.output() << "allocating 3D memory for " << x << endl;
         }
 
-        dynamicArray[x] = new (std::nothrow) T*[nY];
+        dynamicArray[x] = new (nothrow) T*[nY];
 
         if (!dynamicArray[x])
         {
@@ -149,7 +151,7 @@ T*** Allocate3DDynamicArray(int nX, int nY, int nZ)
 
         for (int y = 0; y < nY; ++y)
         {
-            dynamicArray[x][y] = new (std::nothrow) T[nZ];
+            dynamicArray[x][y] = new (nothrow) T[nZ];
             if (!dynamicArray[x][y])
             {
                 dtalog.output() << "Error: insufficient memory.";
@@ -186,7 +188,7 @@ void Deallocate3DDynamicArray(T*** dArray, int nX, int nY)
 template <typename T>
 T**** Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
 {
-    T**** dynamicArray = new (std::nothrow) T***[nX];
+    T**** dynamicArray = new (nothrow) T***[nX];
 
     if (!dynamicArray)
     {
@@ -199,7 +201,7 @@ T**** Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
         if (m % 1000 == 0)
             dtalog.output() << "allocating 4D memory for " << m << " zones" << endl;
 
-        dynamicArray[m] = new (std::nothrow) T**[nX];
+        dynamicArray[m] = new (nothrow) T**[nX];
 
         if (!dynamicArray[m])
         {
@@ -209,7 +211,7 @@ T**** Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
 
         for (int x = 0; x < nX; ++x)
         {
-            dynamicArray[m][x] = new (std::nothrow) T*[nY];
+            dynamicArray[m][x] = new (nothrow) T*[nY];
 
             if (!dynamicArray[m][x])
             {
@@ -219,7 +221,7 @@ T**** Allocate4DDynamicArray(int nM, int nX, int nY, int nZ)
 
             for (int y = 0; y < nY; ++y)
             {
-                dynamicArray[m][x][y] = new (std::nothrow) T[nZ];
+                dynamicArray[m][x][y] = new (nothrow) T[nZ];
                 if (!dynamicArray[m][x][y])
                 {
                     dtalog.output() << "Error: insufficient memory.";
@@ -365,7 +367,7 @@ public:
     }
 
     // Peiheng, 02/02/21, consider using move later
-    void AllocateVector(const std::vector<int>& node_vector, const std::vector<int>& link_vector, bool backwardflag = false)
+    void AllocateVector(const vector<int>& node_vector, const vector<int>& link_vector, bool backwardflag = false)
     {
         m_node_size = node_vector.size();
         m_link_size = link_vector.size();
@@ -412,7 +414,7 @@ public:
 
     int m_node_size;
     int m_link_size;
-    std::vector<int> agent_simu_id_vector;
+    vector<int> agent_simu_id_vector;
 };
 
 class CAgentPath {
@@ -430,7 +432,7 @@ public:
     int o_node_no;
     int d_node_no;
 
-    std::vector <int> path_link_sequence;
+    vector <int> path_link_sequence;
 };
 
 class CColumnVector {
@@ -449,7 +451,7 @@ public:
     bool bfixed_route;
     // first key is the sum of node id;. e.g. node 1, 3, 2, sum of those node ids is 6, 1, 4, 2 then node sum is 7.
     // Peiheng, 02/02/21, potential memory leak, fix it
-    std::map <int, CColumnPath> path_node_sequence_map;
+    map<int, CColumnPath> path_node_sequence_map;
 };
 
 class CAgent_Column {
@@ -482,10 +484,10 @@ public:
 class DTAVehListPerTimeInterval
 {
 public:
-    std::vector<int> m_AgentIDVector;
+    vector<int> m_AgentIDVector;
 };
 
-std::map<int, DTAVehListPerTimeInterval> g_AgentTDListMap;
+map<int, DTAVehListPerTimeInterval> g_AgentTDListMap;
 
 class CAgent_Simu
 {
@@ -561,11 +563,11 @@ public:
     unsigned int m_RandomSeed;
 
     // external input
-    std::vector<int> path_link_seq_no_vector;
+    vector<int> path_link_seq_no_vector;
     // internal output
-    std::vector<float> time_seq_no_vector;
-    std::vector<int> path_timestamp_vector;
-    std::vector<int> path_node_id_vector;
+    vector<float> time_seq_no_vector;
+    vector<int> path_timestamp_vector;
+    vector<int> path_node_id_vector;
 };
 
 vector<CAgent_Simu*> g_agent_simu_vector;
@@ -602,16 +604,16 @@ public:
 
         for (int i = 0; i < number_of_zones; ++i)
         {
-            for (int at = 0;at < number_of_agent_types; ++at)
+            for (int at = 0; at < number_of_agent_types; ++at)
             {
-                for (int tau = 0;tau < g_number_of_demand_periods; ++tau)
+                for (int tau = 0; tau < g_number_of_demand_periods; ++tau)
                     g_origin_demand_array[i][at][tau] = 0.0;
             }
         }
 
         for (int i = 0; i < number_of_agent_types; ++i)
         {
-            for (int tau = 0;tau < g_number_of_demand_periods; ++tau)
+            for (int tau = 0; tau < g_number_of_demand_periods; ++tau)
                 total_demand[i][tau] = 0.0;
         }
 
@@ -656,20 +658,20 @@ public:
     int debug_detail_flag;
 
     // hash table, map external node number to internal node sequence no.
-    std::map<int, int> g_node_id_to_seq_no_map;
+    map<int, int> g_node_id_to_seq_no_map;
     // from integer to integer map zone_id to zone_seq_no
-    std::map<int, int> g_zoneid_to_zone_seq_no_mapping;
-    std::map<string, int> g_link_id_map;
+    map<int, int> g_zoneid_to_zone_seq_no_mapping;
+    map<string, int> g_link_id_map;
 
-    std::vector<CDemand_Period> g_DemandPeriodVector;
+    vector<CDemand_Period> g_DemandPeriodVector;
     int g_LoadingStartTimeInMin;
     int g_LoadingEndTimeInMin;
 
-    std::vector<CAgent_type> g_AgentTypeVector;
-    std::map<int, CLinkType> g_LinkTypeMap;
+    vector<CAgent_type> g_AgentTypeVector;
+    map<int, CLinkType> g_LinkTypeMap;
 
-    std::map<string, int> demand_period_to_seqno_mapping;
-    std::map<string, int> agent_type_2_seqno_mapping;
+    map<string, int> demand_period_to_seqno_mapping;
+    map<string, int> agent_type_2_seqno_mapping;
 
     float total_demand[MAX_AGNETTYPES][MAX_TIMEPERIODS];
     float g_DemandGlobalMultiplier;
@@ -1043,9 +1045,9 @@ public:
 
     // for discrete event simulation
     // link-in queue of each link
-    std::list<int> EntranceQueue;
+    list<int> EntranceQueue;
     // link-out queue of each link
-    std::list<int> ExitQueue;
+    list<int> ExitQueue;
 };
 
 class CServiceArc
@@ -1088,19 +1090,19 @@ public:
     double x;
     double y;
 
-    std::vector<int> m_outgoing_link_seq_no_vector;
-    std::vector<int> m_incoming_link_seq_no_vector;
+    vector<int> m_outgoing_link_seq_no_vector;
+    vector<int> m_incoming_link_seq_no_vector;
 
-    std::vector<int> m_to_node_seq_no_vector;
-    std::map<int, int> m_to_node_2_link_seq_no_map;
+    vector<int> m_to_node_seq_no_vector;
+    map<int, int> m_to_node_2_link_seq_no_map;
 
-    std::map<string, int> m_prohibited_movement_string_map;
+    map<string, int> m_prohibited_movement_string_map;
 };
 
 
-std::vector<CNode> g_node_vector;
-std::vector<CLink> g_link_vector;
-std::vector<CServiceArc> g_service_arc_vector;
+vector<CNode> g_node_vector;
+vector<CLink> g_link_vector;
+vector<CServiceArc> g_service_arc_vector;
 
 class COZone
 {
@@ -1129,10 +1131,10 @@ public:
     float obs_production_upper_bound_flag;
     float obs_attraction_upper_bound_flag;
 
-    std::vector<int> m_activity_node_vector;
+    vector<int> m_activity_node_vector;
 };
 
-std::vector<COZone> g_zone_vector;
+vector<COZone> g_zone_vector;
 
 class CAGBMAgent
 {
@@ -1155,7 +1157,7 @@ public:
     float arrival_time_in_min;
 };
 
-std::vector<CAGBMAgent> g_agbmagent_vector;
+vector<CAGBMAgent> g_agbmagent_vector;
 
 struct CNodeForwardStar{
     CNodeForwardStar() : OutgoingLinkNoArray{ nullptr }, OutgoingNodeNoArray{ nullptr }, OutgoingLinkSize{ 0 }
@@ -1232,8 +1234,8 @@ public:
     bool m_bSingleSP_Flag;
 
     // assigned nodes for computing
-    std::vector<int> m_origin_node_vector;
-    std::vector<int> m_origin_zone_seq_no_vector;
+    vector<int> m_origin_node_vector;
+    vector<int> m_origin_zone_seq_no_vector;
 
     int tau; // assigned nodes for computing
     int m_agent_type_no; // assigned nodes for computing
@@ -1744,7 +1746,7 @@ public:
 };
 
 
-std::vector<NetworkForSP*> g_NetworkForSP_vector;
+vector<NetworkForSP*> g_NetworkForSP_vector;
 NetworkForSP g_RoutingNetwork;
 
 
@@ -1917,7 +1919,7 @@ void g_ReadDemandFileBasedOnDemandFileList(Assignment& assignment)
                         int agent_id, o_zone_id, d_zone_id;
                         string agent_type, demand_period;
 
-                        std::vector <int> node_sequence;
+                        vector <int> node_sequence;
 
                         while (parser.ReadRecord())
                         {
@@ -1981,12 +1983,12 @@ void g_ReadDemandFileBasedOnDemandFileList(Assignment& assignment)
                             string path_node_sequence;
                             parser.GetValueByFieldName("node_sequence", path_node_sequence);
 
-                            std::vector<int> node_id_sequence;
+                            vector<int> node_id_sequence;
 
                             g_ParserIntSequence(path_node_sequence, node_id_sequence);
 
-                            std::vector<int> node_no_sequence;
-                            std::vector<int> link_no_sequence;
+                            vector<int> node_no_sequence;
+                            vector<int> link_no_sequence;
 
                             int node_sum = 0;
                             for (int i = 0; i < node_id_sequence.size(); ++i)
@@ -2315,11 +2317,11 @@ void g_ReadInputData(Assignment& assignment)
     int internal_node_seq_no = 0;
     // step 3: read node file
 
-    std::map<int, int> zone_id_to_centriod_node_id_mapping;  // this is an one-to-one mapping
-    std::map<int, int> zone_id_mapping;  // this is used to mark if this zone_id has been identified or not
+    map<int, int> zone_id_to_centriod_node_id_mapping;  // this is an one-to-one mapping
+    map<int, int> zone_id_mapping;  // this is used to mark if this zone_id has been identified or not
 
-    std::map<int, int> zone_id_production;
-    std::map<int, int> zone_id_attraction;
+    map<int, int> zone_id_production;
+    map<int, int> zone_id_attraction;
 
     CCSVParser parser;
 
@@ -2396,9 +2398,7 @@ void g_ReadInputData(Assignment& assignment)
     // initialize zone vector
     dtalog.output() << "Step 1.5: Initializing O-D zone vector..." << endl;
 
-    std::map<int, int>::iterator it;
-
-    for (it = zone_id_mapping.begin(); it != zone_id_mapping.end(); ++it)
+    for (map<int, int>::iterator it = zone_id_mapping.begin(); it != zone_id_mapping.end(); ++it)
     {
         COZone ozone;
 
@@ -3089,7 +3089,7 @@ void g_reset_and_update_link_volume_based_on_columns(int number_of_links, int it
         {
 //#pragma omp parallel for
 
-            std::map<int, CColumnPath>::iterator it;
+            map<int, CColumnPath>::iterator it;
             int zone_size = g_zone_vector.size();
             int tau_size = assignment.g_DemandPeriodVector.size();
 
@@ -3099,8 +3099,8 @@ void g_reset_and_update_link_volume_based_on_columns(int number_of_links, int it
             float PCE_ratio;
             int nl;
 
-            std::map<int, CColumnPath>::iterator it_begin;
-            std::map<int, CColumnPath>::iterator it_end;
+            map<int, CColumnPath>::iterator it_begin;
+            map<int, CColumnPath>::iterator it_end;
 
             int column_vector_size;
             CColumnVector* p_column;
@@ -3231,7 +3231,7 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
     {
         //#pragma omp parallel for
 
-        std::map<int, CColumnPath>::iterator it;
+        map<int, CColumnPath>::iterator it;
         int zone_size = g_zone_vector.size();
         int tau_size = assignment.g_DemandPeriodVector.size();
 
@@ -3241,8 +3241,8 @@ void g_reset_and_update_link_volume_based_on_ODME_columns(int number_of_links, i
         float PCE_ratio;
         int nl;
 
-        std::map<int, CColumnPath>::iterator it_begin;
-        std::map<int, CColumnPath>::iterator it_end;
+        map<int, CColumnPath>::iterator it_begin;
+        map<int, CColumnPath>::iterator it_end;
 
         int column_vector_size;
         CColumnVector* p_column;
@@ -3374,7 +3374,7 @@ void g_update_gradient_cost_and_assigned_flow_in_column_pool(Assignment& assignm
     for (int orig = 0; orig < g_zone_vector.size(); ++orig)  // o
     {
         CColumnVector* p_column;
-        std::map<int, CColumnPath>::iterator it, it_begin, it_end;
+        map<int, CColumnPath>::iterator it, it_begin, it_end;
         int column_vector_size;
 
         float least_gradient_cost = 999999;
@@ -3765,7 +3765,7 @@ void g_output_simulation_result(Assignment& assignment)
         float path_travel_time = 0;
         float time_stamp = 0;
 
-        std::map<int, CColumnPath>::iterator it, it_begin, it_end;
+        map<int, CColumnPath>::iterator it, it_begin, it_end;
 
         dtalog.output() << "writing data for " << zone_size << "  zones " << endl;
 
@@ -4376,7 +4376,7 @@ void NetworkForSP::backtrace_shortest_path_tree(Assignment& assignment, int iter
     }
 }
 
-void  CLink::CalculateTD_VDFunction()
+void CLink::CalculateTD_VDFunction()
 {
     for (int tau = 0; tau < assignment.g_number_of_demand_periods; ++tau)
     {
@@ -4442,14 +4442,6 @@ double network_assignment(int assignment_mode, int iteration_number, int column_
         iteration_t = end_t - start_t;
         dtalog.output() << "Current CPU time: " << iteration_t / 1000.0 << " s" << endl;
 
-        // commment out for DLL version
-        // if (signal_updating_iterations >=1 && iteration_number >= signal_updating_iterations)
-        // {
-        //     g_fout << "use SignalAPI to recalibrate signal timing at iteration " << iteration_number << endl;
-        //     SignalAPI(iteration_number, assignment_mode, 0);
-        //     g_reload_service_arc_data(assignment);
-        // }
-
         // step 3.1 update travel time and resource consumption
         clock_t start_t_lu = clock();
 
@@ -4472,7 +4464,8 @@ double network_assignment(int assignment_mode, int iteration_number, int column_
         if (dtalog.debug_level() >= 3)
         {
             dtalog.output() << "Results:" << endl;
-            for (int i = 0; i < g_link_vector.size(); ++i) {
+            for (int i = 0; i < g_link_vector.size(); ++i) 
+            {
                 dtalog.output() << "link: " << g_node_vector[g_link_vector[i].from_node_seq_no].node_id << "-->"
                                 << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "
                                 << "flow count:" << g_link_vector[i].flow_volume_per_period[0] << endl;
@@ -4754,7 +4747,7 @@ void Assignment::STTrafficSimulation()
     float path_travel_time = 0;
     float time_stamp = 0;
 
-    std::map<int, CColumnPath>::iterator it, it_begin, it_end;
+    map<int, CColumnPath>::iterator it, it_begin, it_end;
 
     for (int orig = 0; orig < zone_size; ++orig)
     {
@@ -4833,7 +4826,6 @@ void Assignment::STTrafficSimulation()
         int link_size = g_link_vector.size();
         for (int li = 0; li < link_size; ++li)
         {
-            CLink* pLink = &(g_link_vector[li]);
             if (t >= 1)
             {
                 m_LinkCumulativeDeparture[li][t] = m_LinkCumulativeDeparture[li][t - 1];
@@ -5094,8 +5086,10 @@ void Assignment::Demand_ODME(int OD_updating_iterations)
 //#pragma omp parallel for
         for (int orig = 0; orig < g_zone_vector.size(); ++orig)  // o
         {
+            // 06/20/21, potential code optimization, use reference directly
             CColumnVector* p_column;
-            std::map<int, CColumnPath>::iterator it, it_begin, it_end;
+            // 06/20/21, potential code optimization
+            map<int, CColumnPath>::iterator it, it_begin, it_end;
             int column_vector_size;
             int path_seq_count = 0;
 

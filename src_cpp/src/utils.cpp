@@ -22,6 +22,7 @@ using std::endl;
 using std::string;
 using std::vector;
 using std::ofstream;
+using std::stringstream;
 using std::istringstream;
 using std::ostringstream;
 
@@ -256,7 +257,7 @@ string g_time_coding(float time_stamp)
 
 int g_ParserIntSequence(std::string str, vector<int>& vect)
 {
-    std::stringstream ss(str);
+    stringstream ss(str);
     int i;
 
     while (ss >> i)

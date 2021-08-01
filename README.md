@@ -4,7 +4,7 @@ This repo is an **independent development** from [asu-trans-ai-lab/DTALite](http
 
 The development of DTALite in Python has been halted and partially merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS)(which originates from the same sorce code). It will be resumed in the future when Path4GMNS is fully implemented.
 
-The legacy source and binary files are all deprecated and moved to the [archive folder](https://github.com/jdlph/DTALite/tree/main/archive) for referrence only.
+The original source and binary files are all deprecated and moved to the [archive folder](https://github.com/jdlph/DTALite/tree/main/archive) for referrence only.
 
 ## Build DTALite
 We use the cross-platform tool CMake to define the building process.
@@ -55,7 +55,7 @@ Marshall, Norman L. "[Forecasting the impossible: The status quo of estimating t
 
 [Testing environment on the shared library of DTALite](https://github.com/jdlph/Path4GMNS/tree/master/tests)
 
-### Other References: 
+### Other References:
 **1. Parallel computing algorithms**
 
 Qu, Y., & Zhou, X. (2017). Large-scale dynamic transportation network simulation: A space-time-event parallel computing approach. Transportation Research Part C: Emerging technologies, 75, 1-16.

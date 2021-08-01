@@ -2560,10 +2560,10 @@ void g_ReadInputData(Assignment& assignment)
                 link.link_type = link_type;
             }
 
-            int zone_org_id = g_node_vector[internal_from_node_seq_no].zone_org_id;
-            if (assignment.g_LinkTypeMap[link.link_type].type_code == "c" && zone_org_id >= 0)
+            if (assignment.g_LinkTypeMap[link.link_type].type_code == "c")
             {
-                if(assignment.g_zoneid_to_zone_seq_no_mapping.find(zone_org_id) != assignment.g_zoneid_to_zone_seq_no_mapping.end())
+                int zone_org_id = g_node_vector[internal_from_node_seq_no].zone_org_id;
+                if(zone_org_id >= 0 && assignment.g_zoneid_to_zone_seq_no_mapping.find(zone_org_id) != assignment.g_zoneid_to_zone_seq_no_mapping.end())
                     link.zone_seq_no_for_outgoing_connector = assignment.g_zoneid_to_zone_seq_no_mapping[zone_org_id];
             }
 
@@ -4464,7 +4464,7 @@ double network_assignment(int assignment_mode, int iteration_number, int column_
         if (dtalog.debug_level() >= 3)
         {
             dtalog.output() << "Results:" << endl;
-            for (int i = 0; i < g_link_vector.size(); ++i) 
+            for (int i = 0; i < g_link_vector.size(); ++i)
             {
                 dtalog.output() << "link: " << g_node_vector[g_link_vector[i].from_node_seq_no].node_id << "-->"
                                 << g_node_vector[g_link_vector[i].to_node_seq_no].node_id << ", "

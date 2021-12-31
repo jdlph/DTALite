@@ -1,8 +1,15 @@
 # Cross-Platform DTALite
 
-This repo is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. As it still has legacy code which either does not represent the best practices or could be optimized for better performance, we have lanuched another project to further refactor it using modern C++ (mainly C++11 and C++14) in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring). It will be made public once it is mature.
+This repo is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this repos, we only resolve the most critical issues from its original implementation as a minimal effort towards refactoring, which include
 
-The development of DTALite in Python has been halted and partially merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS)(which originates from the same sorce code). It will be resumed in the future when Path4GMNS is fully implemented.
+1. platform-specific implementation,
+2. memory leak,
+3. code bloating (i.e., excessively large executable),
+4. mix use of the C and C++ standard libraries.
+
+As **it still has legacy code which either does not represent the best practices or could be optimized for better performance**, a deep refactoring is still needed and on the way as a separate project. The details are summarized in section **Refactoring**.
+
+The development of DTALite in Python has been halted and partially merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS) (which originates from the same sorce code). It will be resumed in the future when Path4GMNS is fully implemented.
 
 The original source and binary files are all deprecated and moved to the [archive folder](https://github.com/jdlph/DTALite/tree/main/archive) for referrence only.
 
@@ -90,7 +97,7 @@ Schroeder, B, et al. Work zone traffic analysis & impact assessment. (2014) FHWA
 
 ## Refactoring
 
-As **it still has legacy code which either does not represent the best practices or could be optimized for better performance**, we have lanuched another project in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring) to further refactor it using modern C++ (mainly C++11 and C++14) and some well-established C++ best practices with the potential improvements over its original implementation in the following areas. It will be made public once it is mature.
+We have lanuched another project in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring) to further refactor it using modern C++ (mainly C++11 and C++14) and some well-established C++ best practices (e.g., the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)) with the potential improvements over its original implementation in the following areas. It will be made public once it is mature.
 
 1. Readability and maintainability. Major tasks will include removing duplicate source file inclusions and unused variables, fixing some bad namings and formatings, replacing functions from the C standard library with the C++ equivalents, adotping a multi-file structure to group components by their functionalities, separating implementations of class member functions from their declarations unless they are suitable for inline, using list_initializer in the default constructor to initialize members, substituting NULL and typedef with nullptr and using respectively, and so on;
 2. Performance. This can be achieved through move semantics (C++11) to avoid unnecessary copying, the new hash-based unordered_map (C++11) over the tree-based map (C++98) to improve retrival speed, and constexpr (C++11) to shift some run-time evaluations to compilation. Furthermore, a slightly faster deque implementation of the modified label correcting (MLC) algorithm for calculating shortest paths will be implemented to replace the existing one;

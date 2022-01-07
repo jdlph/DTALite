@@ -1,6 +1,6 @@
 # Cross-Platform DTALite
 
-This repo is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this repos, we only resolve the most critical issues from its original implementation as a minimal effort towards refactoring, which include
+This repo is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this repos, we only resolve the most critical issues from its original implementation as a minimal effort towards reliability and portability, which include
 
 1. platform-specific implementation,
 2. memory leak,
@@ -9,9 +9,9 @@ This repo is an **independent development** from [asu-trans-ai-lab/DTALite](http
 
 As **it still has legacy code which either does not represent the best practices or could be optimized for better performance**, a deep refactoring is still needed and on the way as a separate project. The details are summarized in section **Refactoring**.
 
-The development of DTALite in Python has been halted and partially merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS) (which originates from the same sorce code). It will be resumed in the future when Path4GMNS is fully implemented.
-
 The original source and binary files are all deprecated and moved to the [archive folder](https://github.com/jdlph/DTALite/tree/main/archive) for referrence only.
+
+The development of DTALite in Python has been halted and partially merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS) (which originates from the same sorce code). It will be resumed in the future when Path4GMNS is fully implemented.
 
 ## Build DTALite
 We use the cross-platform tool CMake to define the building process.
@@ -57,42 +57,32 @@ Marshall, Norman L. "[Forecasting the impossible: The status quo of estimating t
 [Mini-lessson](https://youtu.be/rorZAhNNOf0): What is the best way to learn dynamic traffic simulation and network assignment for a beginner? Do you want to integrate a powerful traffic simulator in your deep learning framework? We would like to offer a collaborative learning experience through 500 lines of python codes and real-life data sets. This is part of our mini-lessons through teaching dialog.
 
 [Python source code](https://github.com/jdlph/DTALite/tree/main/src_py)
-
 [C++ source code](https://github.com/jdlph/DTALite/tree/main/src_cpp/src)
-
 [Testing environment on the shared library of DTALite](https://github.com/jdlph/Path4GMNS/tree/master/tests)
 
 ### Other References:
 **1. Parallel computing algorithms**
-
 Qu, Y., & Zhou, X. (2017). Large-scale dynamic transportation network simulation: A space-time-event parallel computing approach. Transportation Research Part C: Emerging technologies, 75, 1-16.
 
 **2. OD demand estimation**
-
 Lu, C. C., Zhou, X., & Zhang, K. (2013). Dynamic origin–destination demand flow estimation under congested traffic conditions. Transportation Research Part C: Emerging Technologies, 34, 16-37.
 
 **3. Simplified emission estimation model**
-
 Zhou, X., Tanvir, S., Lei, H., Taylor, J., Liu, B., Rouphail, N. M., & Frey, H. C. (2015). Integrating a simplified emission estimation model and mesoscopic dynamic traffic simulator to efficiently evaluate emission impacts of traffic management strategies. Transportation Research Part D: Transport and Environment, 37, 123-136.
 
 **4. Eco-system optimal time-dependent flow assignment**
-
 Lu, C. C., Liu, J., Qu, Y., Peeta, S., Rouphail, N. M., & Zhou, X. (2016). Eco-system optimal time-dependent flow assignment in a congested network. Transportation Research Part B: Methodological, 94, 217-239.
 
 **5. Transportation-induced population exposure assessment**
-
 Vallamsundar, S., Lin, J., Konduri, K., Zhou, X., & Pendyala, R. M. (2016). A comprehensive modeling framework for transportation-induced population exposure assessment. Transportation Research Part D: Transport and Environment, 46, 94-113.
 
 **6. Integrated ABM and DTA**
-
 Xiong, C., Shahabi, M., Zhao, J., Yin, Y., Zhou, X., & Zhang, L. (2020). An integrated and personalized traveler information and incentive scheme for energy efficient mobility systems. Transportation Research Part C: Emerging Technologies, 113, 57-73.
 
 **7. State-wide transportation modeling**
-
 Zhang. L. (2017) Maryland SHRP2 C10 Implementation Assistance – MITAMS: Maryland Integrated Analysis Modeling System, Maryland State Highway Administration
 
 **8. Workzone applications**
-
 Schroeder, B, et al. Work zone traffic analysis & impact assessment. (2014) FHWA/NC/2012-36. North Carolina. Dept. of Transportation. Research and Analysis Group.
 
 ## Refactoring

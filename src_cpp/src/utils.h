@@ -11,17 +11,19 @@
 #ifndef GUARD_UTILS_H
 #define GUARD_UTILS_H
 
-#include <vector>
-#include <map>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include "teestream.h"
-
 // if you are using cmake, please #include <build_config.h>
 #ifndef _WIN32
 #include <build_config.h>
 #endif
+
+#include "teestream.h"
+
+#include <vector>
+#include <map>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
 
 // utilities functions
 void g_ProgramStop();

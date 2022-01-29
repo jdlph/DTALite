@@ -8,6 +8,9 @@
  * http://www.gnu.org/licenses/gpl-howto.html
  */
 
+#include "teestream.h"
+#include "utils.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -15,8 +18,6 @@
 #include <string>
 #include <cstring>
 #include <vector>
-#include "teestream.h"
-#include "utils.h"
 
 using std::endl;
 using std::string;

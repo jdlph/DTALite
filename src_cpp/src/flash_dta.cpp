@@ -12,11 +12,12 @@
 #include "pch.h"
 #endif
 
+#include "config.h"
+#include "utils.h"
+
 #include <iostream>
 #include <fstream>
 #include <iomanip>
-#include "config.h"
-#include "utils.h"
 
 int main()
 {

@@ -17,6 +17,9 @@
 #include "pch.h"
 #endif
 
+#include "config.h"
+#include "utils.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -33,8 +36,6 @@
 #include <vector>
 #include <map>
 #include <omp.h>
-#include "config.h"
-#include "utils.h"
 
 using std::max;
 using std::min;
@@ -4349,10 +4350,11 @@ void NetworkForSP::backtrace_shortest_path_tree(Assignment& assignment, int iter
                 //fprintf(g_pFileDebugLog, "\n");
 
                 // we obtain the cost, time, distance from the last tree-k
-                if(assignment.assignment_mode >=1) // column based mode
+                // column based mode
+                if(assignment.assignment_mode >=1) 
                 {
                     // we cannot find a path with the same node sum, so we need to add this path into the map,
-                    if (pColumnVector->path_node_sequence_map.find(node_sum) == assignment.g_column_pool[m_origin_zone_seq_no][destination_zone_seq_no][agent_type][tau].path_node_sequence_map.end())
+                    if (pColumnVector->path_node_sequence_map.find(node_sum) == pColumnVector->path_node_sequence_map.end())
                     {
                         // add this unique path
                         int path_count = pColumnVector->path_node_sequence_map.size();
@@ -4366,7 +4368,8 @@ void NetworkForSP::backtrace_shortest_path_tree(Assignment& assignment, int iter
                             l_node_size,
                             temp_path_node_vector,
                             l_link_size,
-                            temp_path_link_vector,true);
+                            temp_path_link_vector,
+                            true);
                     }
 
                     pColumnVector->path_node_sequence_map[node_sum].path_volume += volume;

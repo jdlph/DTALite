@@ -19,7 +19,6 @@
 #include <cstring>
 #include <vector>
 
-using std::endl;
 using std::string;
 using std::vector;
 using std::ofstream;
@@ -29,9 +28,8 @@ using std::ostringstream;
 
 void g_ProgramStop()
 {
-    dtalog.output() << "STALite Program stops. Press any key to terminate. Thanks!" << endl;
-    getchar();
-    exit(0);
+    dtalog.output() << "DTALite Program stops!" << std::endl;
+    exit(1);
 }
 
 void fopen_ss(FILE** file, const char* fileName, const char* mode)
@@ -322,7 +320,7 @@ bool CCSVParser::OpenCSVFile(string fileName, bool b_required)
     {
         if (b_required)
         {
-            dtalog.output() << "File " << fileName << " does not exist. Please check." << std::endl;
+            dtalog.output() << "File " << fileName << " does not exist. Please check." << '\n';
             //g_ProgramStop();
         }
         return false;
@@ -518,7 +516,7 @@ bool CCSVParser::GetValueByFieldName(string field_name, string& value, bool requ
     {
         if (required_field)
         {
-            dtalog.output() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << std::endl;
+            dtalog.output() << "Field " << field_name << " in file " << mFileName << " does not exist. Please check the file." << '\n';
             g_ProgramStop();
         }
         return false;

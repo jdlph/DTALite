@@ -1,3 +1,5 @@
+# Caution
+This repo has been DEPRECATED, and will be REMOVED some time. Please check [TransOMS](https://github.com/jdlph/TransOMS) for the latest development.
 # Cross-Platform DTALite
 
 This repo is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this repos, we only resolve its most critical issues as a minimal effort towards reliability and portability, which include

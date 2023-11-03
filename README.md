@@ -1,9 +1,8 @@
-# Caution
-This repository has been **DEPRECATED**, and will be **REMOVED** some time. Please check [TransOMS](https://github.com/jdlph/TransOMS) for the latest development.
-
 # Cross-Platform DTALite
 
-This repository has two branches: **main** and **feature/multimodal**. While feature/multimodal is set to track the upstream [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite), this branch is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). It aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this repos, we only resolve its most critical issues as a minimal effort towards reliability and portability, which include
+This repository has two branches: **main** and **feature/multimodal**. While branch feature/multimodal is set to track the upstream [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite), the main branch is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). 
+
+Branch main aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this branch, we only resolve its most critical issues as a minimal effort towards reliability and portability, which include
 
 1. platform-specific implementation,
 2. memory leak,
@@ -13,6 +12,9 @@ This repository has two branches: **main** and **feature/multimodal**. While fea
 As **it still has legacy code which either does not represent the best practices or could be optimized for better performance**, a deep refactoring is still needed and on the way as a separate project. The details are summarized in **[Refactoring](#refactoring)**.
 
 The development of DTALite in Python has been halted and fully merged with [Path4GMNS](https://github.com/jdlph/Path4GMNS) (which originates from the same sorce code). The original source code and binary files are all deprecated and moved to the [archive folder](https://github.com/jdlph/DTALite/tree/main/archive) for reference only.
+
+> [!WARNING]
+> This repository has been **DEPRECATED**, and will be **REMOVED** some time. Please check [TransOMS](https://github.com/jdlph/TransOMS) for the latest development.
 
 ## Build DTALite
 We use the cross-platform tool CMake to define the building process.

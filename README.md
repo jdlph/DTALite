@@ -1,8 +1,8 @@
 # Cross-Platform DTALite
 
-This repository has two branches: **main** and **feature/multimodal**. While branch feature/multimodal is set to track the upstream [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite), the main branch is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8). 
+This repository has two branches: **main** and **feature/multimodal**. While branch feature/multimodal is set to track the upstream [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite), the main branch is an **independent development** from [asu-trans-ai-lab/DTALite](https://github.com/asu-trans-ai-lab/DTALite) after [pull request #8](https://github.com/asu-trans-ai-lab/DTALite/pull/8).
 
-Branch main aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this branch, we only resolve its most critical issues as a minimal effort towards reliability and portability, which include
+**Branch main** aims to provide a clean and common C++ code base (over its original implementation) to build both executable and shared library of DTALite across platforms. In this branch, we only resolve its most critical issues as a minimal effort towards reliability and portability, which include
 
 1. platform-specific implementation,
 2. memory leak,
@@ -21,7 +21,7 @@ We use the cross-platform tool CMake to define the building process.
 
 *Build the executable using CMake and run it with NeXTA*
 ```
-# from the root directory of src (i.e., DTALite/src_cpp/src)
+# from the root directory of src (i.e., DTALite/src)
 $ mkdir build
 $ cd build
 $ cmake .. -DBUILD_EXE=ON
@@ -30,7 +30,7 @@ $ cmake --build .
 
 *Build the shared library using CMake and use it with a [Python interface](https://github.com/jdlph/Path4GMNS)*
 ```
-# from the root directory of src (i.e., DTALite/src_cpp/src)
+# from the root directory of src (i.e., DTALite/src)
 $ mkdir build
 $ cd build
 $ cmake .. -DBUILD_EXE=OFF
@@ -49,7 +49,7 @@ A classic Visual Studio solution file is shipped as well along with the project 
 
 ## Refactoring
 
-We have launched another project in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring) to further refactor it using modern C++ (mainly C++11 and C++14) and some well-established C++ best practices (e.g., the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)) with the potential improvements over its original implementation in the following areas. It will be made public once it is mature.
+We have launched another project in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring) to further refactor it using modern C++ (mainly C++11 and C++14) and some well-established C++ best practices (e.g., the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)) with the potential improvements over its original implementation in the following areas.
 
 1. Readability and maintainability. Major tasks will include removing duplicate source file inclusions and unused variables, fixing some bad namings and formats, replacing functions from the C standard library with the C++ equivalents, adopting a multi-file structure to group components by their functionalities, separating implementations of class member functions from their declarations unless they are suitable for inline, using list_initializer in the default constructor to initialize members, substituting NULL and typedef with nullptr and using respectively, and so on;
 2. Performance. This can be achieved through move semantics (C++11) to avoid unnecessary copying, the new hash-based unordered_map (C++11) over the tree-based map (C++98) to improve retrieval speed, and constexpr (C++11) to shift some run-time evaluations to compilation. Furthermore, a slightly faster deque implementation of the modified label correcting (MLC) algorithm for calculating shortest paths will be implemented to replace the existing one;

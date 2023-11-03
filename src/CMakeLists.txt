@@ -1,3 +1,13 @@
+/* Portions Copyright 2019 - 2023 Xuesong Zhou and Peiheng Li
+ *
+ * If you help write or modify the code, please also list your names here.
+ * The reason of having Copyright info here is to ensure all the modified version, as a whole, under the GPL
+ * and further prevent a violation of the GPL.
+ *
+ * More about "How to use GNU licenses for your own software"
+ * http://www.gnu.org/licenses/gpl-howto.html
+ */
+
 cmake_minimum_required (VERSION 3.8)
 
 project ("DTALite")
@@ -35,13 +45,13 @@ set(CMAKE_BUILD_TYPE  "Release")
 set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/bin)
 
 if(BUILD_EXE)
-    add_executable(DTALite utils.cpp flash_dta.cpp main_api.cpp)
+    add_executable(${PROJECT_NAME} utils.cpp flash_dta.cpp main_api.cpp)
 else()
-    add_library(DTALite SHARED utils.cpp main_api.cpp)
+    add_library(${PROJECT_NAME} SHARED utils.cpp main_api.cpp)
 endif()
 
 # using OpenMP
 find_package(OpenMP REQUIRED)
-target_link_libraries(DTALite PRIVATE OpenMP::OpenMP_CXX)
+target_link_libraries(${PROJECT_NAME} PRIVATE OpenMP::OpenMP_CXX)
 
-target_include_directories(DTALite PUBLIC "${PROJECT_BINARY_DIR}")
+target_include_directories(${PROJECT_NAME} PUBLIC "${PROJECT_BINARY_DIR}")

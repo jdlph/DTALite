@@ -1,4 +1,4 @@
-/* Portions Copyright 2019 Xuesong Zhou and Peiheng Li
+/* Portions Copyright 2019 - 2023 Xuesong Zhou and Peiheng Li
  *
  * If you help write or modify the code, please also list your names here.
  * The reason of having Copyright info here is to ensure all the modified version, as a whole, under the GPL

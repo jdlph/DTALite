@@ -1,4 +1,4 @@
-/* Portions Copyright 2019 Xuesong Zhou and Peiheng Li
+/* Portions Copyright 2019 - 2023 Xuesong Zhou and Peiheng Li
  *
  * If you help write or modify the code, please also list your names here.
  * The reason of having Copyright info here is to ensure all the modified version, as a whole, under the GPL
@@ -4350,7 +4350,7 @@ void NetworkForSP::backtrace_shortest_path_tree(Assignment& assignment, int iter
 
                 // we obtain the cost, time, distance from the last tree-k
                 // column based mode
-                if(assignment.assignment_mode >=1) 
+                if(assignment.assignment_mode >=1)
                 {
                     // we cannot find a path with the same node sum, so we need to add this path into the map,
                     if (pColumnVector->path_node_sequence_map.find(node_sum) == pColumnVector->path_node_sequence_map.end())

@@ -1,4 +1,4 @@
-/* Portions Copyright 2021 Xuesong Zhou and Peiheng Li
+/* Portions Copyright 2021 - 2023 Xuesong Zhou and Peiheng Li
  *
  * If you help write or modify the code, please also list your names here.
  * The reason of having Copyright info here is to ensure all the modified version, as a whole, under the GPL
@@ -54,8 +54,8 @@ class DTALog{
 public:
 
 DTALog(): logfile {"log_main.txt"}, ts {std::cout, logfile},
-          db{ 0 }, sig{ 0 }, odme{ 0 }, 
-          path{ 0 }, dta{ 0 }, ue{ 0 } 
+          db{ 0 }, sig{ 0 }, odme{ 0 },
+          path{ 0 }, dta{ 0 }, ue{ 0 }
 {
 }
 

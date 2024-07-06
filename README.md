@@ -39,14 +39,6 @@ $ cmake --build .
 
 You can remove -DBUILD_EXE=ON or -DBUILD_EXE=OFF if you prefer to manually change the value of BUILD_EXE in [CMakeLists.txt](https://github.com/jdlph/DTALite/blob/main/src_cpp/src/CMakeLists.txt).
 
-*Windows Users*
-
-A classic Visual Studio solution file is shipped as well along with the project file to **build executable only on Windows** for the convenience of users who are not familiar with CMake. **Note that** they are not built on CMakeLists.txt. If you are planning to build the shared library of DTALite, there are three ways.
-
-1. Let CMake automatically generate solution and project files for you by using the commands above. It is the easiest and recommmended way;
-2. [Create your own Visual Studio project](https://docs.microsoft.com/en-us/visualstudio/get-started/tutorial-projects-solutions?view=vs-2019) under the shipped solution;
-3. [Create new CMake projects in Visual Studio](https://docs.microsoft.com/en-us/cpp/build/cmake-projects-in-visual-studio?view=msvc-160) by including the embedded [CMakeLists.txt](https://github.com/jdlph/DTALite/blob/main/src_cpp/src/CMakeLists.txt).
-
 ## Refactoring
 
 We have launched another project in a private repo [DTALite_Refactoring](https://github.com/jdlph/DTALite_Refactoring) to further refactor it using modern C++ (mainly C++11 and C++14) and some well-established C++ best practices (e.g., the [C++ Core Guidelines](https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines)) with the potential improvements over its original implementation in the following areas.

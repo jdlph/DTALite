@@ -1,7 +1,10 @@
 # untrack vs code configure folder
-*.vscode/
+*.vscode
+# untrack visual studio folder
+.vs
+debug
 # untrack build folder for building shared libraries
-build/
+build
 # untrack object files during compiling 
 *.o
 # untrack log files

@@ -45,8 +45,8 @@ endif()
 # note CMAKE_BUILD_TYPE WILL BE INGNORED for IDE generators, like Visual Studio and Xcode
 # it only works for single-configuration generators, e.g., make and Ninja
 # see https://cmake.org/cmake/help/v3.0/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_types for details
-set(CMAKE_BUILD_TYPE  "Release")
-set(LIBRARY_OUTPUT_PATH  ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_BUILD_TYPE Release)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 if (BUILD_EXE)
     add_executable(${PROJECT_NAME} src/utils.cpp src/flash_dta.cpp src/main_api.cpp src/simulation.cpp src/DTA_geometry.cpp)
